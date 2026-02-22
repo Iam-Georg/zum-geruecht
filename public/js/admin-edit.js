@@ -265,7 +265,7 @@
 
       /* Farb-Picker (Custom) */
       .tb-color-wrap {
-        position: relative; width: 28px; height: 28px;
+        position: relative; width: 26px; height: 26px;
         border: 2px solid #3a2a0a; border-radius: 5px;
         overflow: hidden; cursor: pointer; flex-shrink: 0;
         transition: border-color 0.15s;
@@ -486,7 +486,9 @@
         <button class="abar-btn" id="btn-save" disabled>~ Speichern <span id="unsaved-dot"></span></button>
         <div class="abar-sep"></div>
         <button class="abar-btn" id="btn-logout">~ Abmelden</button>
-        <button class="abar-btn" id="btn-changepw" title="Passwort ändern">~ Passwort ändern</button>
+        ${currentFile === 'speisekarte.html' ? `
+          <button class="abar-btn" id="btn-upload-pdf" title="Speisekarte als PDF hochladen">~ Speisekarte ändern</button>` : ''}
+      <button class="abar-btn" id="btn-changepw" title="Passwort ändern">~ Passwort ändern</button>
         <span class="bar-filename">${currentFile}</span>
       </div>
       <div id="admin-bar-mobile">
@@ -511,6 +513,40 @@
     document.getElementById('btn-discard').addEventListener('click', discardChanges);
     document.getElementById('btn-save').addEventListener('click', saveChanges);
     document.getElementById('btn-logout').addEventListener('click', logout);
+
+    // ── PDF Upload (nur Speisekarte) ──────────────────────────────────────
+    if (currentFile === 'speisekarte.html') {
+      document.getElementById('btn-upload-pdf').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/pdf';
+        input.onchange = async () => {
+          const file = input.files[0];
+          if (!file) return;
+          if (file.size > 20 * 1024 * 1024) {
+            showNotify('~ PDF zu groß (max. 20 MB) ~', 'error'); return;
+          }
+          showNotify('~ PDF wird hochgeladen… ~', 'info');
+          const fd = new FormData();
+          fd.append('pdf', file);
+          try {
+            const res = await fetch('/api/upload-pdf', { method: 'POST', body: fd, credentials: 'include' });
+            const data = await res.json();
+            if (data.success) {
+              showNotify('~ Speisekarte aktualisiert ✓ ~', 'success');
+              document.querySelectorAll('a[href*="speisekarte.pdf"]').forEach(a => {
+                a.href = '/speisekarte.pdf?v=' + Date.now();
+              });
+            } else {
+              showNotify('~ Fehler: ' + (data.error || 'Unbekannt') + ' ~', 'error');
+            }
+          } catch (e) {
+            showNotify('~ Upload fehlgeschlagen ~', 'error');
+          }
+        };
+        input.click();
+      });
+    }
 
     document.getElementById('btn-changepw').addEventListener('click', () => {
       const current = prompt('Aktuelles Passwort:');
@@ -757,8 +793,8 @@
     tb.innerHTML = `
       <span class="tb-label">Text</span>
 
-      <button class="tb-btn" id="tb-link"    title="Link einfügen">🔗</button>
-      <button class="tb-btn" id="tb-img-insert" title="Bild einfügen">🖼</button>
+      <button class="tb-btn" id="tb-link"    title="Link einfügen">🌐</button>
+      <button class="tb-btn" id="tb-img-insert" title="Bild einfügen">🌄</button>
 
       <div class="tb-sep"></div>
 

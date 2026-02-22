@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const sharp = require('sharp');
+const sharp   = require('sharp');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
@@ -11,12 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(express.json({
-  limit: '10mb'
-}));
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Statische Dateien aus /public ausliefern
@@ -43,8 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Clean URLs – explizite Routen ───────────────────────────────────────────
 const cleanUrlPages = [
-  'speisekarte', 'termine', 'reservierungsanfrage', 'mediathek',
-  'geschichte', 'jobs', 'anfahrt', 'impressum', 'datenschutz'
+  'speisekarte','termine','reservierungsanfrage','mediathek',
+  'geschichte','jobs','anfahrt','impressum','datenschutz'
 ];
 
 // /anfrage existiert nicht – Redirect auf reservierungsanfrage
@@ -64,9 +60,7 @@ cleanUrlPages.forEach(page => {
 // Uploads-Ordner erstellen falls nicht vorhanden
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, {
-    recursive: true
-  });
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
 // ─── Multer – Bild Upload Konfiguration ──────────────────────────────────────
@@ -80,9 +74,9 @@ const storage = multer.diskStorage({
       .replace(/[^a-zA-Z0-9._-]/g, '_')
       .toLowerCase();
     // Wenn Datei schon existiert, Timestamp voranstellen
-    const finalName = fs.existsSync(path.join(UPLOADS_DIR, safeName)) ?
-      `${Date.now()}_${safeName}` :
-      safeName;
+    const finalName = fs.existsSync(path.join(UPLOADS_DIR, safeName))
+      ? `${Date.now()}_${safeName}`
+      : safeName;
     cb(null, finalName);
   }
 });
@@ -99,26 +93,20 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: {
-    fileSize: 15 * 1024 * 1024
-  } // 15 MB max
+  limits: { fileSize: 15 * 1024 * 1024 } // 15 MB max
 });
 
 // ─── Auth Middleware ──────────────────────────────────────────────────────────
 function requireAuth(req, res, next) {
-  const token = req.cookies.admin_token || req.headers['authorization'] ?.split(' ')[1];
-  if (!token) return res.status(401).json({
-    error: 'Nicht eingeloggt'
-  });
+  const token = req.cookies.admin_token || req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Nicht eingeloggt' });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.admin = decoded;
     next();
   } catch (err) {
-    res.status(401).json({
-      error: 'Token ungültig oder abgelaufen'
-    });
+    res.status(401).json({ error: 'Token ungültig oder abgelaufen' });
   }
 }
 
@@ -127,11 +115,11 @@ function requireAuth(req, res, next) {
 // ─── Brute-Force-Schutz für Login ────────────────────────────────────────────
 // Kein externes Paket nötig – simples In-Memory Map pro IP
 const loginAttempts = new Map(); // ip → { count, blockedUntil }
-const MAX_ATTEMPTS = 3; // max. Fehlversuche
+const MAX_ATTEMPTS   = 3;               // max. Fehlversuche
 const BLOCK_DURATION = 15 * 60 * 1000; // 15 Minuten Sperre in ms
 
 function getClientIP(req) {
-  return req.headers['x-forwarded-for'] ?.split(',')[0].trim() || req.socket.remoteAddress;
+  return req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
 }
 
 function isBlocked(ip) {
@@ -146,10 +134,7 @@ function isBlocked(ip) {
 }
 
 function recordFailedAttempt(ip) {
-  const entry = loginAttempts.get(ip) || {
-    count: 0,
-    blockedUntil: null
-  };
+  const entry = loginAttempts.get(ip) || { count: 0, blockedUntil: null };
   entry.count++;
   if (entry.count >= MAX_ATTEMPTS) {
     entry.blockedUntil = Date.now() + BLOCK_DURATION;
@@ -186,9 +171,7 @@ app.post('/api/login', (req, res) => {
     });
   }
 
-  const {
-    password
-  } = req.body;
+  const { password } = req.body;
 
   if (!password || password !== process.env.ADMIN_PASSWORD) {
     recordFailedAttempt(ip);
@@ -209,12 +192,10 @@ app.post('/api/login', (req, res) => {
   // Erfolgreich – Zähler zurücksetzen
   recordSuccessfulLogin(ip);
 
-  const token = jwt.sign({
-      role: 'admin'
-    },
-    process.env.JWT_SECRET, {
-      expiresIn: '8h'
-    }
+  const token = jwt.sign(
+    { role: 'admin' },
+    process.env.JWT_SECRET,
+    { expiresIn: '8h' }
   );
 
   res.cookie('admin_token', token, {
@@ -223,39 +204,27 @@ app.post('/api/login', (req, res) => {
     sameSite: 'strict'
   });
 
-  res.json({
-    success: true,
-    message: 'Eingeloggt'
-  });
+  res.json({ success: true, message: 'Eingeloggt' });
 });
 
 // POST /api/logout
 app.post('/api/logout', (req, res) => {
   res.clearCookie('admin_token');
-  res.json({
-    success: true
-  });
+  res.json({ success: true });
 });
 
 // GET /api/check-auth – Prüft ob Token noch gültig ist
 app.get('/api/check-auth', requireAuth, (req, res) => {
-  res.json({
-    authenticated: true
-  });
+  res.json({ authenticated: true });
 });
 
 // POST /api/save-html – HTML einer Seite speichern
 app.post('/api/save-html', requireAuth, (req, res) => {
-  const {
-    filename,
-    content
-  } = req.body;
+  const { filename, content } = req.body;
 
   // Sicherheitscheck: Nur HTML-Dateien in /public erlauben
   if (!filename || !filename.endsWith('.html')) {
-    return res.status(400).json({
-      error: 'Ungültiger Dateiname'
-    });
+    return res.status(400).json({ error: 'Ungültiger Dateiname' });
   }
 
   // Path Traversal verhindern
@@ -263,15 +232,11 @@ app.post('/api/save-html', requireAuth, (req, res) => {
   const publicDir = path.resolve(path.join(__dirname, 'public'));
 
   if (!targetPath.startsWith(publicDir)) {
-    return res.status(403).json({
-      error: 'Zugriff verweigert'
-    });
+    return res.status(403).json({ error: 'Zugriff verweigert' });
   }
 
   if (!fs.existsSync(targetPath)) {
-    return res.status(404).json({
-      error: 'Datei nicht gefunden'
-    });
+    return res.status(404).json({ error: 'Datei nicht gefunden' });
   }
 
   // Backup erstellen vor dem Speichern
@@ -288,14 +253,9 @@ app.post('/api/save-html', requireAuth, (req, res) => {
     // ── Sitemap lastmod aktualisieren ──────────────────────────────────────────
     updateSitemapLastmod(filename);
 
-    res.json({
-      success: true,
-      message: `${filename} gespeichert`
-    });
+    res.json({ success: true, message: `${filename} gespeichert` });
   } catch (err) {
-    res.status(500).json({
-      error: 'Fehler beim Speichern: ' + err.message
-    });
+    res.status(500).json({ error: 'Fehler beim Speichern: ' + err.message });
   }
 });
 
@@ -306,7 +266,7 @@ function updateSitemapLastmod(filename) {
 
   // URL-Pfad aus Dateiname ableiten (Clean URL: ohne .html)
   const urlPath = filename === 'index.html' ? '/' : '/' + filename.replace(/\.html$/, '');
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const today   = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
   try {
     let xml = fs.readFileSync(sitemapPath, 'utf8');
@@ -314,7 +274,7 @@ function updateSitemapLastmod(filename) {
     // lastmod für die passende URL ersetzen
     // Sucht: <loc>...urlPath</loc> dann die folgende <lastmod>...</lastmod>
     const escaped = urlPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(
+    const regex   = new RegExp(
       `(<loc>[^<]*${escaped}</loc>\\s*<lastmod>)[^<]*(</lastmod>)`, 'g'
     );
 
@@ -332,25 +292,18 @@ function updateSitemapLastmod(filename) {
 // POST /api/upload-image – Bild hochladen + automatisch zu WebP konvertieren
 app.post('/api/upload-image', requireAuth, upload.single('image'), async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({
-      error: 'Kein Bild empfangen'
-    });
+    return res.status(400).json({ error: 'Kein Bild empfangen' });
   }
 
   const originalPath = req.file.path;
   const originalName = req.file.filename;
-  const ext = path.extname(originalName).toLowerCase();
+  const ext          = path.extname(originalName).toLowerCase();
 
   // Nur konvertieren wenn kein WebP (GIFs auch überspringen – Animation)
   if (ext === '.webp' || ext === '.gif') {
     const imageUrl = `/uploads/${originalName}`;
-    return res.json({
-      success: true,
-      url: imageUrl,
-      filename: originalName,
-      originalName: req.file.originalname,
-      size: req.file.size
-    });
+    return res.json({ success: true, url: imageUrl, filename: originalName,
+      originalName: req.file.originalname, size: req.file.size });
   }
 
   try {
@@ -359,9 +312,7 @@ app.post('/api/upload-image', requireAuth, upload.single('image'), async (req, r
     const webpPath = path.join(UPLOADS_DIR, webpName);
 
     await sharp(originalPath)
-      .webp({
-        quality: 82
-      })
+      .webp({ quality: 82 })
       .toFile(webpPath);
 
     // Original löschen – WebP ist das neue Original
@@ -370,25 +321,15 @@ app.post('/api/upload-image', requireAuth, upload.single('image'), async (req, r
     const size = fs.statSync(webpPath).size;
     const imageUrl = `/uploads/${webpName}`;
 
-    res.json({
-      success: true,
-      url: imageUrl,
-      filename: webpName,
-      originalName: req.file.originalname,
-      size
-    });
+    res.json({ success: true, url: imageUrl, filename: webpName,
+      originalName: req.file.originalname, size });
 
   } catch (err) {
     // Konvertierung fehlgeschlagen → Original behalten
     console.error('WebP-Konvertierung fehlgeschlagen:', err.message);
     const imageUrl = `/uploads/${originalName}`;
-    res.json({
-      success: true,
-      url: imageUrl,
-      filename: originalName,
-      originalName: req.file.originalname,
-      size: req.file.size
-    });
+    res.json({ success: true, url: imageUrl, filename: originalName,
+      originalName: req.file.originalname, size: req.file.size });
   }
 });
 
@@ -401,11 +342,7 @@ app.get('/api/images', requireAuth, (req, res) => {
   if (fs.existsSync(UPLOADS_DIR)) {
     const uploadFiles = fs.readdirSync(UPLOADS_DIR)
       .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({
-        url: `/uploads/${f}`,
-        folder: 'uploads',
-        name: f
-      }));
+      .map(f => ({ url: `/uploads/${f}`, folder: 'uploads', name: f }));
     allImages.push(...uploadFiles);
   }
 
@@ -414,11 +351,7 @@ app.get('/api/images', requireAuth, (req, res) => {
   if (fs.existsSync(imagesDir)) {
     const imageFiles = fs.readdirSync(imagesDir)
       .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({
-        url: `/images/${f}`,
-        folder: 'images',
-        name: f
-      }));
+      .map(f => ({ url: `/images/${f}`, folder: 'images', name: f }));
     allImages.push(...imageFiles);
   }
 
@@ -427,11 +360,7 @@ app.get('/api/images', requireAuth, (req, res) => {
   if (fs.existsSync(bilderDir)) {
     const bilderFiles = fs.readdirSync(bilderDir)
       .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({
-        url: `/bilder-kneipe/${f}`,
-        folder: 'bilder-kneipe',
-        name: f
-      }));
+      .map(f => ({ url: `/bilder-kneipe/${f}`, folder: 'bilder-kneipe', name: f }));
     allImages.push(...bilderFiles);
   }
 
@@ -441,32 +370,20 @@ app.get('/api/images', requireAuth, (req, res) => {
     if (fs.existsSync(dir)) {
       const files = fs.readdirSync(dir)
         .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-        .map(f => ({
-          url: `/${folder}/${f}`,
-          folder,
-          name: f
-        }));
+        .map(f => ({ url: `/${folder}/${f}`, folder, name: f }));
       allImages.push(...files);
     }
   });
 
-  res.json({
-    images: allImages
-  });
+  res.json({ images: allImages });
 });
 
 // PATCH /api/images/uploads/:filename – Bild umbenennen (nur uploads)
 app.patch('/api/images/uploads/:filename', requireAuth, (req, res) => {
-  const {
-    filename
-  } = req.params;
-  const {
-    newName
-  } = req.body;
+  const { filename } = req.params;
+  const { newName } = req.body;
 
-  if (!newName) return res.status(400).json({
-    error: 'Kein neuer Name angegeben'
-  });
+  if (!newName) return res.status(400).json({ error: 'Kein neuer Name angegeben' });
 
   // Sicherheitscheck: Nur einfache Dateinamen erlauben
   const safeName = newName.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
@@ -477,95 +394,80 @@ app.patch('/api/images/uploads/:filename', requireAuth, (req, res) => {
   const newPath = path.resolve(path.join(UPLOADS_DIR, safeNameWithExt));
 
   if (!oldPath.startsWith(path.resolve(UPLOADS_DIR))) {
-    return res.status(403).json({
-      error: 'Zugriff verweigert'
-    });
+    return res.status(403).json({ error: 'Zugriff verweigert' });
   }
-  if (!fs.existsSync(oldPath)) return res.status(404).json({
-    error: 'Datei nicht gefunden'
-  });
+  if (!fs.existsSync(oldPath)) return res.status(404).json({ error: 'Datei nicht gefunden' });
   if (fs.existsSync(newPath) && oldPath !== newPath) {
-    return res.status(409).json({
-      error: 'Dateiname bereits vergeben'
-    });
+    return res.status(409).json({ error: 'Dateiname bereits vergeben' });
   }
 
   fs.renameSync(oldPath, newPath);
-  res.json({
-    success: true,
-    newName: safeNameWithExt,
-    url: `/uploads/${safeNameWithExt}`
-  });
+  res.json({ success: true, newName: safeNameWithExt, url: `/uploads/${safeNameWithExt}` });
 });
 
 // DELETE /api/images/:folder/:filename – Bild löschen (nur aus uploads)
 app.delete('/api/images/uploads/:filename', requireAuth, (req, res) => {
-  const {
-    filename
-  } = req.params;
+  const { filename } = req.params;
   const filePath = path.resolve(path.join(UPLOADS_DIR, filename));
 
   // Sicherheitscheck
   if (!filePath.startsWith(path.resolve(UPLOADS_DIR))) {
-    return res.status(403).json({
-      error: 'Zugriff verweigert'
-    });
+    return res.status(403).json({ error: 'Zugriff verweigert' });
   }
 
   if (!fs.existsSync(filePath)) {
-    return res.status(404).json({
-      error: 'Datei nicht gefunden'
-    });
+    return res.status(404).json({ error: 'Datei nicht gefunden' });
   }
 
   fs.unlinkSync(filePath);
-  res.json({
-    success: true
-  });
+  res.json({ success: true });
 });
 
 // ─── Fehlerbehandlung ─────────────────────────────────────────────────────────
+// POST /api/upload-pdf – Speisekarte als PDF hochladen
+const multerPdf = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, path.join(__dirname, 'public')),
+    filename:    (req, file, cb) => cb(null, 'speisekarte.pdf')
+  }),
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') cb(null, true);
+    else cb(new Error('Nur PDF-Dateien erlaubt'), false);
+  },
+  limits: { fileSize: 20 * 1024 * 1024 }
+});
+
+app.post('/api/upload-pdf', requireAuth, multerPdf.single('pdf'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'Keine PDF-Datei erhalten' });
+  res.json({ success: true, url: '/speisekarte.pdf' });
+});
+
 // POST /api/change-password
 app.post('/api/change-password', requireAuth, (req, res) => {
-  const {
-    currentPassword,
-    newPassword
-  } = req.body;
+  const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword)
-    return res.status(400).json({
-      error: 'Felder fehlen'
-    });
+    return res.status(400).json({ error: 'Felder fehlen' });
   if (currentPassword !== process.env.ADMIN_PASSWORD)
-    return res.status(401).json({
-      error: 'Aktuelles Passwort falsch'
-    });
+    return res.status(401).json({ error: 'Aktuelles Passwort falsch' });
   if (newPassword.length < 8)
-    return res.status(400).json({
-      error: 'Neues Passwort zu kurz (min. 8 Zeichen)'
-    });
+    return res.status(400).json({ error: 'Neues Passwort zu kurz (min. 8 Zeichen)' });
 
   const envPath = path.join(__dirname, '.env');
   let envContent = fs.readFileSync(envPath, 'utf8');
   envContent = envContent.replace(/ADMIN_PASSWORD=.*/, `ADMIN_PASSWORD=${newPassword}`);
   fs.writeFileSync(envPath, envContent, 'utf8');
   process.env.ADMIN_PASSWORD = newPassword;
-  res.json({
-    success: true
-  });
+  res.json({ success: true });
 });
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({
-        error: 'Datei zu groß (max. 15 MB)'
-      });
+      return res.status(400).json({ error: 'Datei zu groß (max. 15 MB)' });
     }
   }
   console.error(err);
-  res.status(500).json({
-    error: err.message || 'Serverfehler'
-  });
+  res.status(500).json({ error: err.message || 'Serverfehler' });
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
