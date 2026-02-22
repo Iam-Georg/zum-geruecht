@@ -1,0 +1,90 @@
+.geruecht-form {
+display:block;
+margin:5px 0px 35px 0px;
+padding: 5px 15px 20px 15px;
+background-color:inherit;
+width:100%;
+}
+
+.geruecht-form p {
+font-family: 'Alegreya',georgia,verdana,arial;
+color:#333333;
+font-size: 22px;
+line-height:1.3em;
+margin-bottom:0.4em;
+font-weight:700;
+}
+
+.geruecht-form input,
+.geruecht-form textarea,
+.geruecht-form select {
+width:100%;
+height:40px;
+border:0px;
+padding:5px;
+font-family: 'Alegreya',georgia,verdana,arial!important;
+margin-bottom:15px;
+font-size: 22px!important;
+border-radius:10px;
+background-color:inherit;
+border: 1px solid #604e14;
+color:#a19d91;
+text-align:center;
+}
+
+.geruecht-form select {
+width:100%;
+height:40px;
+}
+
+.anzahl_shop {
+width:50px;
+height:40px;
+padding:5px;
+font-family: 'Alegreya',georgia,verdana,arial;
+margin-left:15px;
+font-size:1.3em;
+text-align:center;
+border: 1px dotted #6e6e6e;
+}
+
+.geruecht-form textarea {
+height:132px!important;
+margin-bottom:14px;
+}
+
+.geruecht-form .schalter {
+float:left;
+margin-top:0px;
+width:180px;
+font-family: 'Alegreya',georgia,verdana,arial;
+color:#261e04;
+background-color:#b89310;
+font-size: 22px;
+border:0px solid #FFFFFF;
+}
+
+.geruecht-form .schalter:hover {
+background-color:#c1baa6;
+}
+
+@media (min-width: 1px) and (max-width: 544px) {
+.geruecht-form .schalter {
+width:100%;
+}
+}
+
+.geruecht-form .message {
+font-family: 'Alegreya',georgia,verdana,arial;
+font-size: 22px;
+font-weight: 400;
+color:#f8f8f4;
+font-size: 20px;
+padding: 8px 15px 8px 15px;
+border: 1px solid #604e14;
+word-spacing: 2px;
+width:100%;
+display:block;
+text-align:center;
+border-radius:10px;
+}

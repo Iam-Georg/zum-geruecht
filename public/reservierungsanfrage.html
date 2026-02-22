@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Reservierung &amp; Anfrage – Zum Gerücht Dresden</title>
+    <meta content="Zum Gerücht - Die letzte Kaschemme - Saufen schmeckt!" name="description" />
+    <meta content="Zum Gerücht,Altlaubegast,Laubegast,Hausbrauerei Laubegast,Krautnudeln,Kneipe" name="keywords" />
+    <meta content="de-DE" name="language" />
+    <meta content="follow,index" name="robots" />
+    <meta content="5 days" name="revisit-after" />
+    <meta content="telephone=no" name="format-detection" />
+    <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+    <link href="images/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/zum-geruecht.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="css/animate.min.css" rel="stylesheet" type="text/css" />
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <meta content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png" name="twitter:image" />
+    <meta content="Tisch reservieren oder Anfrage stellen beim Zum Gerücht in Dresden-Laubegast."
+        name="twitter:description" />
+    <meta content="Reservierung &amp; Anfrage – Zum Gerücht Dresden" name="twitter:title" />
+    <meta content="summary" name="twitter:card" />
+    <meta content="Logo Zum Gerücht" property="og:image:alt" />
+    <meta content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png" property="og:image" />
+    <meta content="https://www.zum-geruecht.de/reservierungsanfrage" property="og:url" />
+    <meta content="Tisch reservieren oder Anfrage stellen beim Zum Gerücht in Dresden-Laubegast."
+        property="og:description" />
+    <meta content="Reservierung &amp; Anfrage – Zum Gerücht Dresden" property="og:title" />
+    <meta content="de_DE" property="og:locale" />
+    <meta content="Zum Gerücht – Die letzte Kaschemme" property="og:site_name" />
+    <meta content="website" property="og:type" />
+    <style>
+        /* ── Modernes Formular ── */
+        .geruecht-form-modern {
+            max-width: 860px;
+            margin: 0 auto 30px;
+        }
+
+        .form-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .form-col {
+            flex: 1;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .form-group-grow {
+            flex: 1;
+        }
+
+        .form-group-grow textarea {
+            flex: 1;
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .form-group label {
+            color: #b38c0f !important;
+            font-size: 13px !important;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px !important;
+            font-family: Arial, sans-serif !important;
+            font-weight: 400 !important;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: rgba(0, 0, 0, 0.35) !important;
+            border: 1px solid #604e14 !important;
+            border-radius: 5px !important;
+            color: #c4b47a !important;
+            font-size: 16px !important;
+            font-family: "Alegreya", georgia, verdana, arial !important;
+            padding: 10px 14px !important;
+            outline: none !important;
+            transition: border-color 0.2s, background 0.2s !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #b38c0f !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #5a4a2a !important;
+        }
+
+        .form-group select option {
+            background: #1a1008;
+            color: #c4b47a;
+        }
+
+        /* Datenschutz Checkbox */
+        .form-privacy {
+            margin: 6px 0 20px;
+        }
+
+        .privacy-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            color: #a19d91 !important;
+            font-size: 15px !important;
+            line-height: 1.5 !important;
+            font-weight: 300 !important;
+        }
+
+        .privacy-label input[type="checkbox"] {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px;
+            margin-top: 2px !important;
+            accent-color: #b38c0f;
+            cursor: pointer;
+            padding: 0 !important;
+            border: 1px solid #604e14 !important;
+            background: rgba(0, 0, 0, 0.35) !important;
+        }
+
+        .privacy-label a {
+            color: #b38c0f !important;
+        }
+
+        /* Honeypot – für Menschen unsichtbar */
+        .form-honeypot {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            overflow: hidden;
+        }
+
+        /* Absenden-Button */
+        .form-submit-row {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .form-submit-btn {
+            background: transparent;
+            border: 1px solid #b38c0f;
+            color: #b38c0f;
+            font-family: "Alegreya", georgia, verdana, arial;
+            font-size: 18px;
+            letter-spacing: 1px;
+            padding: 12px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .form-submit-btn:hover {
+            background: rgba(179, 140, 15, 0.15);
+            color: #d4c99a;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header role="banner">
+        <p><a id="top"></a></p>
+        <div id="spacer_top"></div>
+        <div class="container">
+            <a href="/index"><img alt="Logo zum Gerücht - Zur Saufen schmeckt Startseite"
+                    class="img-responsive center-block" src="images/logo-zum-geruecht.png" title="" /></a>
+        </div>
+    </header><br /><br />
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button aria-expanded="false" class="navbar-toggle collapsed"
+                    data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Saufen schmeckt :)</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="/index">~ Hereinspaziert</a></li>
+                    <li><a href="/speisekarte">~ Speisekarte</a></li>
+                    <li><a href="/termine">~ Termine</a></li>
+                    <li class="active"><a href="/reservierungsanfrage">~ Reservierungen</a></li>
+                    <li><a href="/mediathek">~ Galerie</a></li>
+                    <li><a href="/geschichte">~ Geschichte</a></li>
+                    <li><a href="/jobs">~ Jobs</a></li>
+                    <li><a href="https://hausbrauerei-laubegast.de/" rel="external" title="">~ BierShop</a></li>
+                    <li><a href="/anfahrt">~ Anfahrt</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <main role="main">
+        <div class="container">
+            <div id="wrapper">
+                <div id="wrapper-box">
+                    <div id="wrapper-content-box">
+                        <img alt="Seitentitel Anfragen in alter Schrift auf rostigen Hintergrund"
+                            class="img-responsive letter-spacer animated fadeIn" src="images/letter-anfrage.png"
+                            title="" />
+                        <h2>~ Hier könnt Ihr viel Lob, Jammern und Reservierungen loswerden ~</h2>
+                        <p>Beschwerden über kaltes Essen sind kein Jammern!</p>
+                        <br />
+                        <a id="anfrage"></a>
+                        <a id="sprung_form"></a>
+
+                        <div class="geruecht-form-modern">
+                            <form action="https://www.zum-geruecht.de/reservierungsanfrage.php#sprung_form"
+                                method="post" role="form">
+                                <div class="form-grid">
+                                    <!-- Linke Spalte -->
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label for="name">Name *</label>
+                                            <input autocomplete="name" id="name" name="name" placeholder="Dein Name"
+                                                required="" type="text" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="telefon">Telefon</label>
+                                            <input autocomplete="tel" id="telefon" name="telefon" placeholder="Optional"
+                                                type="tel" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">E-Mail *</label>
+                                            <input autocomplete="email" id="email" name="email"
+                                                placeholder="deine@mail.de" required="" type="email" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="platz">Sitzwunsch *</label>
+                                            <select id="platz" name="platz" required="">
+                                                <option disabled="" selected="" value="">Wo möchtest Du sitzen?</option>
+                                                <option value="Nichtraucherbereich">🚭 Nichtraucherbereich</option>
+                                                <option value="Raucherbereich">🚬 Raucherbereich</option>
+                                                <option value="Egal">Egal – überrascht mich</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Rechte Spalte -->
+                                    <div class="form-col">
+                                        <div class="form-group form-group-grow">
+                                            <label for="anfrage">Deine Anfrage *</label>
+                                            <textarea id="anfrage" name="anfrage"
+                                                placeholder="Datum, Uhrzeit, Personenanzahl, besondere Wünsche..."
+                                                required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Datenschutz -->
+                                <div class="form-privacy">
+                                    <label class="privacy-label">
+                                        <input id="datenschutz" name="datenschutz" required="" type="checkbox"
+                                            value="1" />
+                                        <span>Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> gelesen
+                                            und bin einverstanden, dass meine Daten zur Bearbeitung meiner Anfrage
+                                            verwendet werden.</span>
+                                    </label>
+                                </div>
+                                <!-- Honeypot (unsichtbar für Menschen, Bots füllen es aus) -->
+                                <div aria-hidden="true" class="form-honeypot">
+                                    <input autocomplete="off" id="website" name="website" tabindex="-1" type="text" />
+                                </div>
+                                <div class="form-submit-row">
+                                    <button class="form-submit-btn" name="anmelden" type="submit">~ Anfrage absenden
+                                        ~</button>
+                                </div>
+                                <input name="form_ok" type="hidden" value="0" />
+                            </form>
+                        </div>
+                        <!-- ende form -->
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                                    class="img-responsive picture-center" src="images/haarlinie.png" title="" />
+                            </div>
+                        </div>
+                        <p class="clear"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="container">
+        <footer role="contentinfo">
+            <div id="footer">
+                <img alt="" class="img-responsive" src="images/footer1.png" title="" />
+                <a href="http://www.hausbrauerei-laubegast.de/home.htm" rel="external"><img alt="Hausbrauerei Laubegast"
+                        class="img-responsive" src="images/footer2.png" title="Hausbrauerei Laubegast" /></a>
+                <p>Zum Gerücht - Die letzte Kaschemme<br />Altlaubegast 5, 01279 Dresden<br />Telefon: 0351 – 251 34
+                    25<br /><a href="mailto:info@zum-geruecht.de">info@zum-geruecht.de</a></p>
+                <div class="spacer_break"></div>
+                <p><a href="https://goo.gl/maps/PePtEP8hVgw5PGWM8" rel="external">Anfahrt</a><a
+                        href="/reservierungsanfrage">Anfragen</a><a href="https://hausbrauerei-laubegast.de/"
+                        rel="external">Zum BierShop</a><a href="https://www.facebook.com/zumgeruecht" rel="external"
+                        title="Zum Gerücht bei Facebook">GerüchteFacebook</a><a
+                        href="https://www.instagram.com/zum_geruecht/" rel="external"
+                        title="Zum Gerücht bei Instagram">GerüchteInstagram</a><a
+                        href="/datenschutz">Datenschutzerklärung</a><a href="/impressum">Impressum</a></p>
+                <div class="spacer_break"></div>
+                <p><a href="https://www.dresden-central.de/" rel="external">Gästewohnung im Barockviertel Dresden</a>
+                </p>
+                <p><a href="http://www.ravenshope.de/" rel="external">Chillout Linie von Bert Stephan</a></p>
+                <p><a href="https://www.kayak.co.uk/Dresden.18925.guide" rel="external">Get more ideas on what to do on
+                        the Dresden Travel Guide.</a></p>
+            </div>
+            <div id="schalter_oben"><a aria-label="Seite scrollt zum Seitenanfang" class="schalter_top"
+                    href="/reservierungsanfrage#top" role="link"></a></div>
+            <div id="finish"></div>
+            <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+            <script src="js/jquery.js"></script>
+            <script src="js/bootstrap.js"></script>
+            <script src="js/zum-geruecht.js"></script>
+            <script src="js/lightbox.js"></script>
+        </footer>
+    </div>
+    <script src="/js/admin-edit.js"></script>
+</body>
+
+</html>

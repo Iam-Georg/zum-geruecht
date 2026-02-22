@@ -1,0 +1,665 @@
+/* fonts liegen in fonts.css - Alegreya  */
+
+body {
+    color: #262626;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    word-wrap: break-word !important;
+    position: relative;
+    text-align: center;
+    background-color: #27160e;
+}
+
+body:after {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    content: '';
+    background: url(../images/bg_zum_geruecht.jpg);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #27160e;
+    background-position: center top;
+    z-index: -99999;
+}
+
+@media (min-width: 1px) and (max-width: 767px) {
+    body {
+        color: #262626;
+        font-family: 'Alegreya', georgia, verdana, arial;
+        word-wrap: break-word !important;
+        position: relative;
+        text-align: center;
+        background-color: #27160e;
+    }
+
+    body:after {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        content: '';
+        background: url(../images/bg_zum_geruecht_small.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: #27160e;
+        background-position: center top;
+        z-index: -99999;
+    }
+}
+
+/* ****************************** TAB FOCUS ****************************** */
+
+/* Standardm��ig den Fokus-Rahmen bei Links und Buttons deaktivieren */
+button:focus,
+a:focus {
+    outline: none !important;
+}
+
+/* F�r alle interaktiven Elemente, die Tastaturfokus ben�tigen */
+.user-is-tabbing a:focus,
+.user-is-tabbing button:focus,
+.user-is-tabbing [data-focus-visible-added] {
+    border: 2px solid red !important;
+    /* Roter Rahmen f�r den Fokus */
+    outline: none !important;
+}
+
+
+.archiv_ausgabe_view:focus-visible {
+    border: 2px solid red !important;
+    outline: none !important;
+}
+
+
+/* Entfernt den Fokus-Stil beim Mausklick */
+.archiv_ausgabe_view:not(:focus-visible) {
+    outline: none;
+}
+
+/* Unterst�tzung f�r :focus-visible falls vom Polyfill unterst�tzt */
+a:focus-visible,
+button:focus-visible {
+    border: 2px solid red !important;
+}
+
+/* Zus�tzlicher Fokus f�r Bilder in Links */
+a img {
+    display: inline-block;
+    /* Macht das Bild fokussierbar */
+}
+
+.user-is-tabbing a:focus img,
+.user-is-tabbing a:focus-visible img,
+[data-focus-visible-added] img {
+    border: 2px solid red !important;
+    /* Roter Rahmen bei Tastaturfokus */
+}
+
+/* Optional: Weitere interaktive Elemente */
+.user-is-tabbing input:focus,
+.user-is-tabbing select:focus,
+.user-is-tabbing textarea:focus {
+    border: 2px solid red !important;
+}
+
+.schalter_zuruecksetzen_seite:focus-visible i {
+    outline: 2px solid red;
+    border-radius: 50%;
+}
+
+select:focus-visible {
+    outline: 2px solid red;
+}
+
+a:focus-visible img {
+    outline: 2px solid red !important;
+    outline-offset: 2px !important;
+}
+
+input[type="checkbox"]:focus-visible {
+    outline: none;
+    /* entfernt den Standard-Fokusrahmen */
+    box-shadow: 0 0 0 2px red;
+    /* roter Rahmen-Effekt */
+    border: 2px solid red;
+    /* falls du einen festen Rahmen willst */
+}
+
+/* ****************************** TAB FOCUS ****************************** */
+
+.clearer {
+    display: block;
+    clear: both;
+    line-height: 0;
+    height: 1px;
+    font-size: 0;
+    visibility: hidden;
+}
+
+.clear {
+    clear: both;
+}
+
+#spacer_top {
+    margin: 0 auto;
+    width: 10%;
+    height: 35px;
+}
+
+@media screen and (max-width: 480px) {
+    #spacer_top {
+        margin: 0 auto;
+        height: 20px;
+    }
+}
+
+#wrapper {
+    padding-bottom: 10px;
+}
+
+@media screen and (max-width: 480px) {
+    #wrapper {
+        float: left;
+        width: 99%;
+        padding-bottom: 10px;
+    }
+}
+
+#wrapper-box {
+    text-align: left;
+}
+
+#wrapper-content-box {
+    font-family: 'Alegreya', georgia, verdana, arial;
+    padding: 30px 45px 20px 45px;
+    border-radius: 20px;
+    background: url(../images/bg_box.png) repeat;
+    -moz-box-shadow: 0 0 15px #000000;
+    -webkit-box-shadow: 0 0 15px #000000;
+    box-shadow: 0 0 15px #000000;
+    border: 1px solid #604e14;
+    -webkit-transform: translatez(0);
+    -moz-transform: translatez(0);
+    -ms-transform: translatez(0);
+    -o-transform: translatez(0);
+    transform: translatez(0);
+    max-width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+    #wrapper-content-box {
+        padding: 20px 15px 10px 15px;
+    }
+}
+
+
+#wrapper-box h1 {
+    color: #1f1f02;
+    font-size: 3.0em;
+    font-weight: normal;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    padding-bottom: 12px;
+    text-shadow: 1px 1px 1px #3a3a3a;
+    background: url(../images/h2.png) no-repeat;
+    margin-bottom: 5px;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+
+@media screen and (max-width: 480px) {
+    #wrapper-box h1 {
+        color: #1f1f02;
+        font-size: 2.8em;
+        font-weight: normal;
+        padding-bottom: 12px;
+        background: none;
+        margin-bottom: 5px;
+    }
+}
+
+#wrapper-box h2 {
+    color: #b38c0f;
+    font-size: 28px;
+    font-weight: 400;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    margin: 15px 0px 15px 0px;
+    text-shadow: 1px 1px 1px #3a3a3a;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+    text-align: center !important;
+}
+
+@media screen and (max-width: 480px) {
+    #wrapper-box h2 {
+        font-size: 24px;
+        font-weight: 400;
+    }
+}
+
+#wrapper-box img {
+    display: block;
+    margin: 5px 0;
+    border-radius: 10px;
+}
+
+#wrapper-box .rahmen {
+    border: 1px solid #604e14;
+}
+
+#wrapper-box a img.rahmen:hover {
+    border: 1px solid #807c6e !important;
+    -webkit-transform: scale(1.03);
+    transform: scale(1.03);
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
+#wrapper-box .img_round {
+    border-radius: 10px;
+
+}
+
+#wrapper-box .bilder_links {
+    float: left;
+    margin: 1px 25px 10px 0;
+    border: 0px solid #848573;
+}
+
+#wrapper-box .bilder_rechts {
+    float: right;
+    margin: 1px 0 10px 25px;
+    border: 0px dashed #848573;
+}
+
+#wrapper-box .slideshow {}
+
+#wrapper-box a,
+#wrapper-box a:link,
+#wrapper-box a:visited {
+    color: #a19d91;
+    background: inherit;
+    text-decoration: none;
+}
+
+#wrapper-box a:hover {
+    color: #ebebeb;
+    text-decoration: none;
+}
+
+#wrapper-box p,
+#wrapper-box td {
+    margin: 0 0 10px 0;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    font-size: 22px;
+    line-height: 27px;
+    color: #9E8124;
+    text-align: center !important;
+    -moz-hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+    -o-hyphens: none !important;
+    hyphens: none !important;
+}
+
+#wrapper-box td {
+    padding: 0 0 0 0;
+}
+
+#wrapper-box boxquote {
+    margin: 0 0 0 20px;
+}
+
+#wrapper-box ul,
+#wrapper-box ol {
+    font-family: 'Alegreya', georgia, verdana, arial;
+    font-size: 22px;
+    line-height: 27px;
+    color: #9E8124;
+    margin-bottom: 1.2em;
+    text-align: center !important;
+}
+
+#wrapper-box ol li {
+    margin: 0 0 0 30px;
+    list-style-type: decimal-leading-zero;
+}
+
+#wrapper-box ul li {
+    margin: 0 0 0 30px;
+    list-style-type: square;
+}
+
+#wrapper-box .letter-spacer {
+    /* Position grafische �berschrift */
+    padding: 0px 0px 15px 0px;
+    margin: auto !important;
+}
+
+@media screen and (max-width: 991px) {
+    #wrapper-box .letter-spacer {
+        /* Position grafische �berschrift */
+        padding: 0px 0px 0px 0px !important;
+    }
+}
+
+#wrapper-box .picture-center {
+    /* Position grafische �berschrift */
+    margin: auto !important;
+}
+
+#wrapper-box .termin {
+    background: url(../images/bg_termine.png) repeat;
+    margin-bottom: 20px;
+    border: 1px solid #604e14;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/*
+#wrapper-box .termin:hover {
+border: 1px solid #938e7f;
+}
+*/
+
+#wrapper-box .termin p {
+    color: #b1ada0;
+    font-size: 23px;
+    line-height: 23px;
+    font-weight: normal;
+    margin-bottom: 0 !important;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    /* padding: 6px 0px 0px 0px; */
+    padding: 6px;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+
+#wrapper-box .termin p.grau {
+    color: #b1ada0;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: normal;
+    /* padding-bottom: 0px !important; */
+}
+
+#wrapper-box .termin p.tag {
+    color: #b0874d;
+    font-weight: 500;
+    font-size: 30px !important;
+    line-height: 30px !important;
+    padding-top: 0px !important;
+}
+
+#wrapper-box .termin p.musikart {
+    color: #b0874d;
+    font-size: 19px;
+    line-height: 19px;
+    font-weight: normal;
+    padding: 0px 0px 0px 0px !important;
+    letter-spacing: 1px !important;
+}
+
+#wrapper-box .termin a.web,
+#wrapper-box .termin a.web:link {
+    display: inline-block;
+    color: #775d3f;
+    font-size: 19px;
+    line-height: 19px;
+    font-weight: normal;
+    padding: 3px 15px 3px 15px !important;
+    border: 1px solid #775d3f;
+    text-align: center;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+#wrapper-box .termin a.web:hover {
+    color: #b1ada0 !important;
+}
+
+/* ###################################################################### */
+
+
+#wrapper-box .nachruf {
+    background: url(../images/bg_termine.png) repeat;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #604e14;
+    border-radius: 10px;
+    padding: 35px 15px 25px 15px;
+}
+
+#wrapper-box .nachruf h2 {
+    color: #aaa593 !important;
+}
+
+#wrapper-box .nachruf p {
+    color: #a29c8a;
+    font-size: 23px;
+    font-weight: normal;
+    font-family: 'Alegreya', georgia, verdana, arial;
+    padding: 6px 0px 0px 0px;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+
+#wrapper-box .nachruf p.grau {
+    color: #a29c8a;
+}
+
+/* ### spacer_break ###################################################################### */
+
+.spacer_break {
+    display: block;
+    width: 100%;
+    height: 25px;
+}
+
+@media (min-width: 1px) and (max-width: 767px) {
+    .spacer_break {
+        height: 12px !important;
+    }
+}
+
+/* ### Haarlinie ###################################################################### */
+
+#wrapper-box hr {
+    border-style: dotted;
+    border-color: #b4ad93;
+    height: 1px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.carousel-inner img {}
+
+.carousel-inner {
+    -moz-box-shadow: 0 0 5px #ccc;
+    -webkit-box-shadow: 0 0 5px #ccc;
+    box-shadow: 0 0 5px #ccc;
+    border: 5px solid #fff;
+    -webkit-transform: translatez(0);
+    -moz-transform: translatez(0);
+    -ms-transform: translatez(0);
+    -o-transform: translatez(0);
+    transform: translatez(0);
+    border-radius: 10px;
+}
+
+.carousel-control.left {
+    background-image: none;
+}
+
+.carousel-control.right {
+    background-image: none;
+}
+
+.carousel-inner .item {
+    background: white;
+}
+
+/* //////////////////////// nach oben ///////////////////////////////// */
+
+#schalter_oben {
+    position: absolute;
+    z-index: 999;
+    top: 97%;
+    left: 100%;
+    position: fixed;
+    margin-left: -50px;
+    margin-top: -58px;
+}
+
+#schalter_oben a,
+#schalter_oben a:link {
+    background: url(../images/top_schalter.png);
+    display: block;
+    width: 50px;
+    height: 50px;
+    font-size: 0.0em;
+}
+
+#schalter_oben a:hover {
+    background: url(../images/top_schalter.png);
+}
+
+/* ///////////////// Modal Fenster //////////////////////// */
+
+.modal-dialog {
+    #max-width: 1200px !important;
+    text-align: center !important;
+    /*
+margin-left:40%;
+margin-right: 40%;
+*/
+}
+
+@media (min-width: 1px) and (max-width: 991px) {
+    .modal-dialog {
+        width: 90% !important;
+        /*
+width:90%;
+margin-left:5%;
+margin-right:5%;
+*/
+
+    }
+}
+
+.modal-dialog img {
+    max-width: 100%;
+}
+
+table img .modal-dialog {
+    cursor: pointer;
+}
+
+.thumbnail {}
+
+/* ///////////////// Video //////////////////////// */
+
+.responsive-video {
+    padding-bottom: 56.25%;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    height: 0;
+}
+
+.responsive-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* ///////////////// glyphicon //////////////////////// */
+
+.my_glyphicon_orange {
+    padding-right: 5px;
+    font-size: 0.8em;
+    color: #e37326;
+}
+
+.my_glyphicon_schwarz {
+    color: #000000;
+    padding-right: 5px;
+    font-size: 0.8em;
+}
+
+.my_glyphicon_weiss {
+    color: #FFFFFF;
+}
+
+.my_glyphicon_blau {
+    color: #0786bd;
+}
+
+/* ///////////////// img-responsive //////////////////////// */
+
+#wrapper-content-box .img-responsive {}
+
+@media screen and (max-width:768px) {
+    #wrapper-content-box .img-responsive {
+        margin-bottom: 30px !important;
+    }
+}
+
+/* /////////////////////////////////////////////////// */
+
+.well .color_black,
+.color_black {
+    background-color: #212121 !important;
+}
+
+.well .color_orange,
+.color_orange {
+    background-color: #e37326 !important;
+    /* border: 1px solid #e37326!important; */
+}
+
+.well .color_grau,
+.color_grau {
+    background-color: #545454 !important;
+    /* border: 1px solid #e37326!important; */
+}
+
+.well .color_hellgrau,
+.color_hellgrau {
+    background-color: #f5f5f5 !important;
+    /* border: 1px solid #e37326!important; */
+}
+
+.well .color_orange_hell,
+.color_orange_hell {
+    background-color: #fcf6e9 !important;
+    border: 1px solid #ffc8a2 !important;
+}
+
+.well .color_white,
+.color_white {
+    background-color: #FFFFFF !important;
+    border-top: 0px dashed #999999;
+}

@@ -1,0 +1,57 @@
+/* ### Footer ###################################################################### */
+
+#footer {
+margin-top:40px;
+margin-bottom:40px;
+}
+
+#footer img {
+margin:0 auto;
+/*
+-moz-box-shadow: 0 0 5px #ccc;
+-webkit-box-shadow: 0 0 5px #ccc;
+box-shadow: 0 0 5px #ccc;
+border:  5px solid #fff;
+border-radius: 10px;
+*/
+-webkit-transform: translatez(0);
+-moz-transform: translatez(0);
+-ms-transform: translatez(0);
+-o-transform: translatez(0);
+transform: translatez(0);
+}
+
+
+#footer p,
+#footer a,
+#footer a:link,
+#footer a:visited {
+font-family: 'Alegreya',georgia,verdana,arial;
+font-size: 20px;
+line-height: 24px;
+font-weight:normal;
+text-decoration: none;
+padding: 3px 10px 3px 10px;
+color: #b38c0f;
+}
+
+@media (min-width: 1px) and (max-width: 544px) {
+#footer a,
+#footer a:link {
+display:block;
+}
+}
+
+#footer a:hover {
+color: #ffffbd;
+}
+
+#finish {
+height:80px;
+}
+
+@media screen and (max-width: 480px) {
+#finish {
+height:30px;
+}
+}

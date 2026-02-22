@@ -1,0 +1,16 @@
+# Abhängigkeiten
+node_modules/
+
+# Umgebungsvariablen – NIEMALS hochladen!
+.env
+
+# Backups
+backups/
+
+# Uploads (gehören nicht ins Repo)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# System
+.DS_Store
+Thumbs.db

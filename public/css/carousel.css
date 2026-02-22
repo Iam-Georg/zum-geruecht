@@ -1,0 +1,15 @@
+/* Courusel */
+#myCarousel {
+
+}
+
+.carousel-indicators {
+ display:none;
+}
+
+
+.carousel-caption h5,
+.carousel-caption p {
+display:none;
+}
+
