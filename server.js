@@ -6,14 +6,26 @@ const multer = require('multer');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 
 const app = express();
+app.set('trust proxy', 1); // Railway/Cloudflare Proxy vertrauen
 const PORT = process.env.PORT || 3000;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// ── Security Headers ────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 
 // Statische Dateien aus /public ausliefern
 // ── WebP Middleware: liefert .webp wenn vorhanden, Browser unterstützt es ──
@@ -52,7 +64,36 @@ cleanUrlPages.forEach(page => {
     if (fs.existsSync(htmlPath)) {
       res.sendFile(htmlPath);
     } else {
-      res.status(404).send('Seite nicht gefunden');
+      res.status(404).send(`<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seite nicht gefunden – Zum Gerücht</title>
+  <link href="/css/bootstrap.css" rel="stylesheet">
+  <link href="/css/zum-geruecht.css" rel="stylesheet">
+  <style>
+    .error-box { text-align:center; padding:60px 20px; }
+    .error-box h1 { color:#b38c0f; font-size:5em; margin-bottom:10px; }
+    .error-box h2 { color:#c4b47a; margin-bottom:20px; }
+    .error-box p  { color:#a19d91; font-size:1.2em; margin-bottom:30px; }
+    .error-box a  { color:#b38c0f; text-decoration:none; border:1px solid #604e14; padding:10px 24px; border-radius:5px; }
+    .error-box a:hover { border-color:#b38c0f; color:#ebebeb; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="wrapper"><div id="wrapper-box"><div id="wrapper-content-box">
+      <div class="error-box">
+        <h1>404</h1>
+        <h2>~ Diese Seite existiert nicht ~</h2>
+        <p>Vielleicht wurde sie umgezogen oder der Link ist veraltet.</p>
+        <a href="/">~ Zurück zur Startseite ~</a>
+      </div>
+    </div></div></div>
+  </div>
+</body>
+</html>`);
     }
   });
 });
@@ -119,7 +160,7 @@ const MAX_ATTEMPTS   = 3;               // max. Fehlversuche
 const BLOCK_DURATION = 15 * 60 * 1000; // 15 Minuten Sperre in ms
 
 function getClientIP(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+  return req.ip || req.socket.remoteAddress;
 }
 
 function isBlocked(ip) {
@@ -158,7 +199,7 @@ setInterval(() => {
 }, 60 * 60 * 1000);
 
 // POST /api/login – Admin Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const ip = getClientIP(req);
 
   // Gesperrte IP ablehnen
@@ -173,7 +214,9 @@ app.post('/api/login', (req, res) => {
 
   const { password } = req.body;
 
-  if (!password || password !== process.env.ADMIN_PASSWORD) {
+  const isMatch = password ? await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH) : false;
+
+  if (!isMatch) {
     recordFailedAttempt(ip);
     const entry = loginAttempts.get(ip);
     const remaining = MAX_ATTEMPTS - entry.count;
@@ -200,6 +243,7 @@ app.post('/api/login', (req, res) => {
 
   res.cookie('admin_token', token, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 8 * 60 * 60 * 1000,
     sameSite: 'strict'
   });
@@ -245,6 +289,17 @@ app.post('/api/save-html', requireAuth, (req, res) => {
 
   const backupName = `${filename.replace('.html', '')}_${Date.now()}.html`;
   fs.copyFileSync(targetPath, path.join(backupDir, backupName));
+
+  // Alte Backups aufräumen – max. 10 pro Seite
+  const baseName = filename.replace('.html', '');
+  const allBackups = fs.readdirSync(backupDir)
+    .filter(f => f.startsWith(baseName + '_') && f.endsWith('.html'))
+    .sort();
+  if (allBackups.length > 10) {
+    allBackups.slice(0, allBackups.length - 10).forEach(old => {
+      fs.unlinkSync(path.join(backupDir, old));
+    });
+  }
 
   // Datei speichern
   try {
@@ -439,7 +494,71 @@ const multerPdf = multer({
 
 app.post('/api/upload-pdf', requireAuth, multerPdf.single('pdf'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Keine PDF-Datei erhalten' });
-  res.json({ success: true, url: '/speisekarte.pdf' });
+  const version = Date.now();
+  res.json({ success: true, url: `/speisekarte.pdf?v=${version}`, version });
+});
+
+// GET /api/backups/:filename – Sicherungen auflisten
+app.get('/api/backups/:filename', requireAuth, (req, res) => {
+  const filename = req.params.filename;
+  if (!filename || !filename.endsWith('.html') || filename.includes('/') || filename.includes('\\'))
+    return res.status(400).json({ error: 'Ungültiger Dateiname' });
+
+  const backupDir = path.join(__dirname, 'backups');
+  if (!fs.existsSync(backupDir)) return res.json({ backups: [] });
+
+  const baseName = filename.replace('.html', '');
+  const backups = fs.readdirSync(backupDir)
+    .filter(f => f.startsWith(baseName + '_') && f.endsWith('.html'))
+    .sort().reverse()
+    .map(f => {
+      const ts = parseInt(f.replace(baseName + '_', '').replace('.html', ''));
+      return {
+        name: f,
+        date: isNaN(ts) ? f : new Date(ts).toLocaleString('de-DE', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        })
+      };
+    });
+  res.json({ backups });
+});
+
+// POST /api/restore-backup – Sicherung wiederherstellen
+app.post('/api/restore-backup', requireAuth, (req, res) => {
+  const { filename, backupName } = req.body;
+  if (!filename || !filename.endsWith('.html') || filename.includes('/') ||
+      !backupName || !backupName.endsWith('.html') || backupName.includes('/'))
+    return res.status(400).json({ error: 'Ungültige Parameter' });
+
+  const backupDir  = path.join(__dirname, 'backups');
+  const backupPath = path.resolve(path.join(backupDir, backupName));
+  const targetPath = path.resolve(path.join(__dirname, 'public', filename));
+  const publicDir  = path.resolve(path.join(__dirname, 'public'));
+
+  if (!targetPath.startsWith(publicDir) || !backupPath.startsWith(path.resolve(backupDir)))
+    return res.status(403).json({ error: 'Zugriff verweigert' });
+  if (!fs.existsSync(backupPath))
+    return res.status(404).json({ error: 'Backup nicht gefunden' });
+
+  try {
+    // Aktuellen Stand zuerst sichern
+    if (fs.existsSync(targetPath)) {
+      const baseName = filename.replace('.html', '');
+      const safeName = baseName + '_' + Date.now() + '.html';
+      fs.copyFileSync(targetPath, path.join(backupDir, safeName));
+      // Max 10 Backups pro Seite
+      const all = fs.readdirSync(backupDir)
+        .filter(f => f.startsWith(baseName + '_') && f.endsWith('.html')).sort();
+      if (all.length > 10) all.slice(0, all.length - 10)
+        .forEach(old => fs.unlinkSync(path.join(backupDir, old)));
+    }
+    fs.copyFileSync(backupPath, targetPath);
+    updateSitemapLastmod(filename);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // POST /api/change-password
@@ -447,16 +566,17 @@ app.post('/api/change-password', requireAuth, (req, res) => {
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword)
     return res.status(400).json({ error: 'Felder fehlen' });
-  if (currentPassword !== process.env.ADMIN_PASSWORD)
+  if (!bcrypt.compareSync(currentPassword, process.env.ADMIN_PASSWORD_HASH))
     return res.status(401).json({ error: 'Aktuelles Passwort falsch' });
   if (newPassword.length < 8)
     return res.status(400).json({ error: 'Neues Passwort zu kurz (min. 8 Zeichen)' });
 
+  const newHash = bcrypt.hashSync(newPassword, 10);
   const envPath = path.join(__dirname, '.env');
   let envContent = fs.readFileSync(envPath, 'utf8');
-  envContent = envContent.replace(/ADMIN_PASSWORD=.*/, `ADMIN_PASSWORD=${newPassword}`);
+  envContent = envContent.replace(/ADMIN_PASSWORD_HASH=.*/, `ADMIN_PASSWORD_HASH=${newHash}`);
   fs.writeFileSync(envPath, envContent, 'utf8');
-  process.env.ADMIN_PASSWORD = newPassword;
+  process.env.ADMIN_PASSWORD_HASH = newHash;
   res.json({ success: true });
 });
 

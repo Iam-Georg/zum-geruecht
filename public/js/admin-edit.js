@@ -265,7 +265,7 @@
 
       /* Farb-Picker (Custom) */
       .tb-color-wrap {
-        position: relative; width: 26px; height: 26px;
+        position: relative; width: 28px; height: 28px;
         border: 2px solid #3a2a0a; border-radius: 5px;
         overflow: hidden; cursor: pointer; flex-shrink: 0;
         transition: border-color 0.15s;
@@ -303,6 +303,9 @@
       .gal-upload-zone { margin:12px 20px 4px; border:1px dashed #3a2a0a; border-radius:6px; padding:12px 16px; text-align:center; cursor:pointer; transition:all 0.2s; flex-shrink:0; color:#6a5a3a; font-size:14px; }
       .gal-upload-zone:hover,.gal-upload-zone.dragover { border-color:#604e14; background:rgba(179,140,15,0.04); color:#a19d91; }
       .gal-filter-bar { display:flex; gap:5px; padding:8px 20px 9px; flex-shrink:0; flex-wrap:wrap; align-items:center; border-bottom:1px solid #1f1408; }
+      .gal-search { flex:1; min-width:100px; max-width:200px; background:#0e0906; border:1px solid #604e14; border-radius:4px; color:#e8dfc8; padding:5px 10px; font-size:12px; outline:none; transition:border-color 0.15s; }
+      .gal-search:focus { border-color:#b38c0f; }
+      .gal-search::placeholder { color:#4a3a1a; }
       .gal-filter-btn { padding:2px 10px; border-radius:3px; border:1px solid #2a1a08; background:transparent; color:#6a5a3a; font-size:13px; font-family:'Alegreya',georgia,verdana,arial; cursor:pointer; transition:all 0.2s; }
       .gal-filter-btn.active { border-color:#604e14; color:#b38c0f; background:rgba(179,140,15,0.08); }
       .gal-filter-btn:hover { border-color:#604e14; color:#a19d91; }
@@ -318,7 +321,7 @@
       .gal-item-footer { flex-shrink:0; background:rgba(0,0,0,0.88); display:flex; align-items:center; height:28px; padding:0 3px 0 5px; gap:2px; }
       .gal-item-name { flex:1; color:#a19d91; font-size:10px; font-family:Arial,sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border:1px solid transparent; border-radius:2px; background:transparent; outline:none; padding:2px 3px; transition:border-color 0.15s,background 0.15s; min-width:0; }
       .gal-item-name:focus { border-color:#b38c0f; background:rgba(0,0,0,0.6); color:#c4b47a; }
-      .gal-item-delete { flex-shrink:0; width:22px; height:22px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid transparent; border-radius:3px; color:#6a4a4a; font-size:12px; cursor:pointer; transition:all 0.15s; font-family:Arial,sans-serif; padding:0; line-height:1; }
+      .gal-item-delete { flex-shrink:0; width:22px; height:22px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid transparent; border-radius:3px; color:#a06060; font-size:12px; cursor:pointer; transition:all 0.15s; font-family:Arial,sans-serif; padding:0; line-height:1; }
       .gal-item-delete:hover { color:#c97070; border-color:#6a2a2a; background:rgba(180,60,60,0.15); }
       .gal-empty { grid-column:1/-1; text-align:center; color:#4a3a1a; padding:50px; font-size:16px; }
 
@@ -335,6 +338,21 @@
       #btn-add-termin:hover { border-color:#b38c0f; color:#ebebeb; }
 
       /* Termin-Block im Edit-Mode: Löschen-Button sichtbar */
+      /* ── Passwort-Modal ── */
+      #pw-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:99999; display:flex; align-items:center; justify-content:center; }
+      #pw-modal { background:#1e1208; border:1px solid #604e14; border-radius:10px; padding:28px 32px; width:320px; max-width:90vw; box-shadow:0 20px 60px rgba(0,0,0,0.8); font-family:Arial,sans-serif; }
+      #pw-modal h3 { color:#c4b47a; font-size:15px; margin-bottom:20px; letter-spacing:1px; text-align:center; }
+      #pw-modal label { display:block; font-size:11px; color:#a19d91; letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; margin-top:14px; }
+      #pw-modal input { width:100%; background:#0e0906; border:1px solid #604e14; border-radius:4px; color:#e8dfc8; padding:8px 10px; font-size:14px; outline:none; transition:border-color 0.15s; box-sizing:border-box; }
+      #pw-modal input:focus { border-color:#b38c0f; }
+      #pw-modal-error { color:#c97070; font-size:12px; margin-top:10px; min-height:18px; text-align:center; }
+      #pw-modal-btns { display:flex; gap:10px; margin-top:22px; }
+      #pw-modal-btns button { flex:1; padding:9px; border-radius:5px; font-size:13px; cursor:pointer; border:1px solid #604e14; letter-spacing:1px; transition:all 0.15s; }
+      .pw-modal-cancel { background:transparent; color:#a19d91; }
+      .pw-modal-cancel:hover { border-color:#a19d91 !important; color:#ebebeb !important; }
+      .pw-modal-save { background:#604e14; color:#e8dfc8; }
+      .pw-modal-save:hover { background:#b38c0f !important; border-color:#b38c0f !important; color:#fff !important; }
+
       .termin-delete {
         display:none; position:absolute; top:4px; right:4px;
         background:rgba(180,60,60,0.85); color:#fff; border:none;
@@ -343,6 +361,216 @@
       }
       body.edit-mode .row.termin { position:relative; }
       body.edit-mode .row.termin:hover .termin-delete { display:block; }
+
+      /* ── CMS Block-System ── */
+      body.edit-mode .cms-block { position: relative; }
+
+      /* Schwebende Leiste – erscheint ÜBER dem Block oben rechts */
+      .cms-block-ui {
+        position: absolute;
+        top: -10px; right: 0;
+        height: 26px;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        z-index: 800;
+        background: rgba(15,9,3,0.95);
+        border: 1px solid #604e14;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        white-space: nowrap;
+      }
+      /* Pseudo-Brücke zwischen Block und UI damit Hover nicht bricht */
+      .cms-block-ui::after {
+        content: '';
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        height: 8px;
+      }
+      /* UI anzeigen bei Hover auf cms-block ODER auf Kind-Elemente (Textfelder, Bilder etc.) */
+      body.edit-mode .cms-block:hover > .cms-block-ui,
+      body.edit-mode .cms-block:hover .cms-block-ui,
+      body.edit-mode .cms-block-ui:hover { display: flex; }
+
+      .cms-ui-btn {
+        height: 26px;
+        padding: 0 9px;
+        display: flex; align-items: center; gap: 4px;
+        background: transparent;
+        border: none;
+        border-right: 1px solid #2a1a08;
+        color: #a08840;
+        cursor: pointer;
+        font-size: 11px;
+        font-family: Arial, sans-serif;
+        letter-spacing: 0.5px;
+        transition: all 0.13s;
+        white-space: nowrap;
+      }
+      .cms-ui-btn:last-child { border-right: none; }
+      .cms-ui-btn:hover { background: #2a1a08; color: #c4b47a; }
+      .cms-ui-btn.drag-handle { cursor: grab; color: #6a5030; }
+      .cms-ui-btn.drag-handle:hover { color: #a08840; }
+      .cms-ui-btn.drag-handle:active { cursor: grabbing; }
+      .cms-ui-btn.del-btn:hover { background: #5a1010; color: #f0a0a0; }
+
+      .cms-block.sortable-ghost { opacity: 0.3; }
+      .cms-block.sortable-chosen { outline: 2px dashed #604e14; outline-offset: 2px; }
+
+      /* Bilder in cms-blocks immer zentrieren */
+      body.edit-mode .cms-block > img,
+      .cms-block > img { display: block; margin: 0 auto; }
+
+      /* Link Button im cms-block-ui - disabled State */
+      .cms-ui-btn.link-btn:disabled,
+      .cms-ui-btn.link-btn.disabled {
+        color: #3a2a0a !important;
+        cursor: not-allowed !important;
+        opacity: 0.5;
+      }
+      .cms-ui-btn.link-btn:disabled:hover,
+      .cms-ui-btn.link-btn.disabled:hover {
+        background: transparent !important;
+        color: #3a2a0a !important;
+      }
+
+      /* Admin-Bar Buttons (nur im Edit-Mode) */
+      #btn-add-block-text, #btn-add-block-img,
+      #btn-add-block-line, #btn-add-block-spacer { display: none; }
+      body.edit-mode #btn-add-block-text,
+      body.edit-mode #btn-add-block-img,
+      body.edit-mode #btn-add-block-line,
+      body.edit-mode #btn-add-block-spacer {
+        display: inline-flex; align-items: center; gap: 5px;
+      }
+
+      /* ── Spalten-System ── */
+      .col-placeholder {
+        min-height: 80px; display:flex; flex-direction:column;
+        align-items:center; justify-content:center; gap:8px;
+        border:1px dashed #3a2208; border-radius:4px; padding:16px;
+      }
+      .col-placeholder-label { font-family:Arial,sans-serif; font-size:11px; color:#4a3218; letter-spacing:1px; text-transform:uppercase; }
+      .col-placeholder-btns { display:flex; gap:8px; }
+      .col-add-btn {
+        display:flex; align-items:center; gap:5px; padding:6px 12px;
+        background:rgba(20,12,4,0.9); border:1px solid #604e14; border-radius:4px;
+        color:#c4b47a; font-size:12px; font-family:Arial,sans-serif; cursor:pointer; transition:all 0.15s;
+      }
+      .col-add-btn:hover { background:#604e14; color:#fff; }
+      .col-controls {
+        display:none; position:absolute; bottom:0; right:0;
+        background:rgba(15,9,3,0.92); border:1px solid #2a1a08;
+        border-radius:3px 0 0 0; overflow:hidden;
+      }
+      body.edit-mode [class*="col-md-"]:hover > .col-controls,
+      body.edit-mode [class*="col-sm-"]:hover > .col-controls,
+      body.edit-mode .col-controls:hover { display:flex; }
+      .col-ctrl-btn {
+        padding:4px 8px; background:transparent; border:none; border-right:1px solid #2a1a08;
+        color:#6a5030; cursor:pointer; font-size:10px; font-family:Arial,sans-serif;
+        display:flex; align-items:center; gap:3px; transition:all 0.13s; white-space:nowrap;
+      }
+      .col-ctrl-btn:last-child { border-right:none; }
+      .col-ctrl-btn:hover { background:#2a1a08; color:#c4b47a; }
+      .col-ctrl-btn.del-col:hover { background:#5a1010; color:#f0a0a0; }
+      body.edit-mode [class*="col-md-"],
+      body.edit-mode [class*="col-sm-"] { position:relative; min-height:40px; }
+
+      /* ── Bild-Skala ── */
+      #img-scale-bar {
+        position:fixed; z-index:9001; display:none; align-items:center; gap:8px;
+        background:rgba(15,9,3,0.95); border:1px solid #604e14; border-radius:4px;
+        padding:5px 10px; font-family:Arial,sans-serif; font-size:11px; color:#a08840;
+        box-shadow:0 2px 10px rgba(0,0,0,0.6);
+      }
+      #img-scale-bar.visible { display:flex; }
+      #img-scale-bar input[type=range] {
+        -webkit-appearance:none; width:100px; height:4px;
+        background:#3a2208; border-radius:2px; outline:none;
+      }
+      #img-scale-bar input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance:none; width:14px; height:14px; background:#b38c0f; border-radius:50%; cursor:pointer;
+      }
+      #img-scale-bar span { min-width:34px; text-align:right; color:#c4b47a; }
+
+      /* ── Custom Confirm/Alert Modal ── */
+      #cms-dialog-overlay {
+        position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:199999;
+        display:none; align-items:center; justify-content:center;
+      }
+      #cms-dialog-overlay.open { display:flex; }
+      #cms-dialog-box {
+        background:#1e1208; border:1px solid #604e14; border-radius:10px;
+        padding:26px 30px; width:340px; max-width:92vw;
+        box-shadow:0 20px 60px rgba(0,0,0,.85); font-family:Arial,sans-serif;
+        display:flex; flex-direction:column; gap:16px;
+      }
+      #cms-dialog-msg { color:#e8dfc8; font-size:13px; line-height:1.6; text-align:center; }
+      #cms-dialog-btns { display:flex; gap:10px; }
+      .cms-dialog-btn {
+        flex:1; padding:9px; border-radius:5px; font-size:13px; cursor:pointer;
+        font-family:Arial,sans-serif; letter-spacing:0.5px; transition:all 0.15s;
+      }
+      .cms-dialog-btn.cancel { background:transparent; border:1px solid #3a2a0a; color:#a19d91; }
+      .cms-dialog-btn.cancel:hover { border-color:#604e14; color:#c4b47a; }
+      .cms-dialog-btn.confirm { background:#604e14; border:1px solid #604e14; color:#e8dfc8; }
+      .cms-dialog-btn.confirm:hover { background:#b38c0f; border-color:#b38c0f; color:#fff; }
+      .cms-dialog-btn.danger { background:#7a1a1a; border:1px solid #7a1a1a; color:#f0c0c0; }
+      .cms-dialog-btn.danger:hover { background:#a02020; border-color:#c04040; }
+
+      /* ── Backup-Modal ── */
+      #backup-modal-overlay {
+        position:fixed; inset:0; background:rgba(0,0,0,0.78); z-index:99999;
+        display:none; align-items:center; justify-content:center;
+      }
+      #backup-modal-overlay.open { display:flex; }
+      #backup-modal {
+        background:#1e1208; border:1px solid #604e14; border-radius:10px;
+        padding:26px 30px; width:420px; max-width:94vw; max-height:80vh;
+        box-shadow:0 20px 60px rgba(0,0,0,.85); font-family:Arial,sans-serif;
+        display:flex; flex-direction:column;
+      }
+      #backup-modal h3 { color:#c4b47a; font-size:14px; margin:0 0 16px; letter-spacing:1px; text-align:center; }
+      #backup-list { overflow-y:auto; flex:1; margin-bottom:14px; }
+      .backup-item {
+        display:flex; align-items:center; justify-content:space-between;
+        padding:8px 0; border-bottom:1px solid #1a0e06; gap:10px;
+      }
+      .backup-item:last-child { border-bottom:none; }
+      .backup-item-date { color:#e8dfc8; font-size:12px; }
+      .backup-restore-btn {
+        padding:4px 12px; background:transparent; flex-shrink:0;
+        border:1px solid #604e14; border-radius:4px; color:#c4b47a;
+        cursor:pointer; font-size:11px; transition:all 0.15s; white-space:nowrap;
+      }
+      .backup-restore-btn:hover { background:#604e14; color:#fff; }
+      .backup-empty { color:#4a3a1a; text-align:center; padding:30px; font-size:13px; }
+      #backup-close-btn {
+        padding:8px; background:transparent; width:100%;
+        border:1px solid #3a2a0a; border-radius:5px; color:#6a5030;
+        cursor:pointer; font-size:12px; font-family:Arial,sans-serif; transition:all 0.15s;
+      }
+      #backup-close-btn:hover { border-color:#604e14; color:#c4b47a; }
+
+      /* spacer_break */
+      .spacer_break { height: 40px; width: 100%; }
+      body.edit-mode .spacer_break {
+        border: 1px dashed #3a2208;
+        border-radius: 3px;
+        position: relative;
+        display: flex; align-items: center; justify-content: center;
+      }
+      body.edit-mode .spacer_break::before {
+        content: 'Abstand';
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #3a2208;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
 
       /* Galerie-Modus: Bild an Cursor einfügen */
       #gal-insert-img-mode .gal-header h3::after {
@@ -487,8 +715,16 @@
         <div class="abar-sep"></div>
         <button class="abar-btn" id="btn-logout">~ Abmelden</button>
         ${currentFile === 'speisekarte.html' ? `
-          <button class="abar-btn" id="btn-upload-pdf" title="Speisekarte als PDF hochladen">~ Speisekarte ändern</button>` : ''}
+          <button class="abar-btn" id="btn-upload-pdf" title="Speisekarte als PDF hochladen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> PDF ändern</button>` : ''}
+        <div class="abar-sep"></div>
+        <button class="abar-btn" id="btn-add-block-text" title="Textfeld hinzufügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Text</button>
+        <button class="abar-btn" id="btn-add-block-img"  title="Bild-Block hinzufügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Bild</button>
+        <button class="abar-btn" id="btn-add-block-line" title="Trennlinie einfügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/></svg> Trennlinie</button>
+        <button class="abar-btn" id="btn-add-block-spacer" title="Abstand einfügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="4"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="4" y1="20" x2="20" y2="20"/></svg> Abstand</button>
+        <div class="abar-sep"></div>
       <button class="abar-btn" id="btn-changepw" title="Passwort ändern">~ Passwort ändern</button>
+        <div class="abar-sep"></div>
+        <button class="abar-btn" id="btn-backups" title="Sicherungsverlauf"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.34L1 10"/></svg> Verlauf</button>
         <span class="bar-filename">${currentFile}</span>
       </div>
       <div id="admin-bar-mobile">
@@ -524,13 +760,18 @@
           const file = input.files[0];
           if (!file) return;
           if (file.size > 20 * 1024 * 1024) {
-            showNotify('~ PDF zu groß (max. 20 MB) ~', 'error'); return;
+            showNotify('~ PDF zu groß (max. 20 MB) ~', 'error');
+            return;
           }
           showNotify('~ PDF wird hochgeladen… ~', 'info');
           const fd = new FormData();
           fd.append('pdf', file);
           try {
-            const res = await fetch('/api/upload-pdf', { method: 'POST', body: fd, credentials: 'include' });
+            const res = await fetch('/api/upload-pdf', {
+              method: 'POST',
+              body: fd,
+              credentials: 'include'
+            });
             const data = await res.json();
             if (data.success) {
               showNotify('~ Speisekarte aktualisiert ✓ ~', 'success');
@@ -548,36 +789,79 @@
       });
     }
 
+    document.getElementById('btn-backups')?.addEventListener('click', openBackupModal);
     document.getElementById('btn-changepw').addEventListener('click', () => {
-      const current = prompt('Aktuelles Passwort:');
-      if (!current) return;
-      const neu = prompt('Neues Passwort (min. 8 Zeichen):');
-      if (!neu || neu.length < 8) {
-        alert('Zu kurz!');
-        return;
-      }
-      const confirm = prompt('Neues Passwort bestätigen:');
-      if (neu !== confirm) {
-        alert('Passwörter stimmen nicht überein!');
-        return;
-      }
+      const overlay = document.createElement('div');
+      overlay.id = 'pw-modal-overlay';
+      overlay.innerHTML = `
+        <div id="pw-modal">
+          <h3>~ Passwort ändern ~</h3>
+          <label>Aktuelles Passwort</label>
+          <input type="password" id="pw-current" autocomplete="current-password">
+          <label>Neues Passwort</label>
+          <input type="password" id="pw-new" autocomplete="new-password" placeholder="min. 8 Zeichen">
+          <label>Bestätigen</label>
+          <input type="password" id="pw-confirm" autocomplete="new-password">
+          <div id="pw-modal-error"></div>
+          <div id="pw-modal-btns">
+            <button class="pw-modal-cancel" id="pw-modal-cancel">Abbrechen</button>
+            <button class="pw-modal-save" id="pw-modal-save">Speichern</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      document.getElementById('pw-current').focus();
+      const errEl = document.getElementById('pw-modal-error');
 
-      fetch('/api/change-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            currentPassword: current,
-            newPassword: neu
-          })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.success) showNotify('~ Passwort geändert ~', 'success');
-          else showNotify('~ ' + (data.error || 'Fehler') + ' ~', 'error');
-        })
-        .catch(() => showNotify('~ Fehler ~', 'error'));
+      function closeModal() {
+        overlay.remove();
+      }
+      document.getElementById('pw-modal-cancel').addEventListener('click', closeModal);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+      document.getElementById('pw-modal-save').addEventListener('click', async () => {
+        const current = document.getElementById('pw-current').value;
+        const neu = document.getElementById('pw-new').value;
+        const confirm = document.getElementById('pw-confirm').value;
+        if (!current) {
+          errEl.textContent = 'Aktuelles Passwort eingeben.';
+          return;
+        }
+        if (neu.length < 8) {
+          errEl.textContent = 'Neues Passwort min. 8 Zeichen.';
+          return;
+        }
+        if (neu !== confirm) {
+          errEl.textContent = 'Passwörter stimmen nicht überein.';
+          return;
+        }
+        errEl.textContent = '';
+        try {
+          const res = await fetch('/api/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              currentPassword: current,
+              newPassword: neu
+            })
+          });
+          const data = await res.json();
+          if (data.success) {
+            closeModal();
+            showNotify('~ Passwort geändert ~', 'success');
+          } else errEl.textContent = data.error || 'Fehler';
+        } catch {
+          errEl.textContent = 'Verbindungsfehler';
+        }
+      });
+      ['pw-current', 'pw-new', 'pw-confirm'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') document.getElementById('pw-modal-save').click();
+        });
+      });
     });
 
     // Mobile Toggle
@@ -729,6 +1013,7 @@
     showTextToolbar();
     addTerminDeleteButtons();
     showTerminAddButton();
+    initBlockSystem();
     showNotify('~ Bearbeitungsmodus aktiv ~', 'info');
   }
 
@@ -759,6 +1044,7 @@
     removeEditable();
     hideTextToolbar();
     hideTerminAddButton();
+    destroyBlockSystem();
   }
 
   // ─── Text editierbar ──────────────────────────────────────────────────────────
@@ -793,8 +1079,8 @@
     tb.innerHTML = `
       <span class="tb-label">Text</span>
 
-      <button class="tb-btn" id="tb-link"    title="Link einfügen">🌐</button>
-      <button class="tb-btn" id="tb-img-insert" title="Bild einfügen">🌄</button>
+      <button class="tb-btn" id="tb-link"    title="Link einfügen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+      <button class="tb-btn" id="tb-img-insert" title="Bild einfügen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
 
       <div class="tb-sep"></div>
 
@@ -906,23 +1192,77 @@
         return;
       }
 
-      // Neuen Link einfügen
-      const url = prompt('URL eingeben:', 'https://');
-      if (!url || url === 'https://') return;
-      if (sel && !sel.isCollapsed) {
-        document.execCommand('createLink', false, url);
-        document.querySelectorAll('a[href="' + url + '"]').forEach(a => {
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-        });
-      } else {
-        const linkText = prompt('Linktext (kein Text markiert):', '');
-        if (!linkText) return;
-        document.execCommand('insertHTML', false,
-          `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`);
+      // Neuen Link einfügen – Custom Modal
+      const selectedText = sel && !sel.isCollapsed ? sel.toString() : '';
+      const savedRangeForLink = sel && sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null;
+
+      const linkOverlay = document.createElement('div');
+      linkOverlay.id = 'link-modal-overlay';
+      linkOverlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;';
+      linkOverlay.innerHTML = `
+        <div style="background:#1e1208;border:1px solid #604e14;border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-family:Arial,sans-serif;">
+          <h3 style="color:#c4b47a;font-size:14px;margin-bottom:18px;letter-spacing:1px;text-align:center;">~ Link einfügen ~</h3>
+          <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">URL</label>
+          <input id="link-url-input" type="url" value="https://" style="width:100%;background:#0e0906;border:1px solid #604e14;border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;">
+          ${!selectedText ? `
+          <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;margin-top:14px;">Linktext</label>
+          <input id="link-text-input" type="text" placeholder="Anzeigetext" style="width:100%;background:#0e0906;border:1px solid #604e14;border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;">` : ''}
+          <div id="link-modal-error" style="color:#c97070;font-size:12px;margin-top:8px;min-height:16px;"></div>
+          <div style="display:flex;gap:10px;margin-top:20px;">
+            <button id="link-modal-cancel" class="pw-modal-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:transparent;color:#a19d91;letter-spacing:1px;">Abbrechen</button>
+            <button id="link-modal-save" class="pw-modal-save" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:#604e14;color:#e8dfc8;letter-spacing:1px;">Einfügen</button>
+          </div>
+        </div>`;
+      document.body.appendChild(linkOverlay);
+      document.getElementById('link-url-input').focus();
+      document.getElementById('link-url-input').select();
+
+      function closeLinkModal() {
+        linkOverlay.remove();
       }
-      markUnsaved();
-      updateToolbarState();
+      document.getElementById('link-modal-cancel').addEventListener('click', closeLinkModal);
+      linkOverlay.addEventListener('click', (e) => {
+        if (e.target === linkOverlay) closeLinkModal();
+      });
+
+      document.getElementById('link-modal-save').addEventListener('click', () => {
+        const url = document.getElementById('link-url-input').value.trim();
+        const errEl = document.getElementById('link-modal-error');
+        if (!url || url === 'https://') {
+          errEl.textContent = 'Bitte eine URL eingeben.';
+          return;
+        }
+
+        closeLinkModal();
+
+        // Selektion wiederherstellen
+        if (savedRangeForLink) {
+          const s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(savedRangeForLink);
+        }
+
+        if (selectedText) {
+          document.execCommand('createLink', false, url);
+          document.querySelectorAll('a[href="' + url + '"]').forEach(a => {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+          });
+        } else {
+          const linkTextEl = document.getElementById('link-text-input');
+          const linkText = linkTextEl ? linkTextEl.value.trim() : '';
+          if (!linkText) return;
+          document.execCommand('insertHTML', false,
+            `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`);
+        }
+        markUnsaved();
+        updateToolbarState();
+      });
+
+      // Enter-Taste im URL-Feld
+      document.getElementById('link-url-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('link-modal-save').click();
+      });
     });
 
     // ── Bild an Cursorposition einfügen ───────────────────────────────────
@@ -1071,6 +1411,7 @@
           <button class="gal-filter-btn" data-folder="galerie_25_1">~ galerie_25_1</button>
           <button class="gal-filter-btn" data-folder="galerie_25_2">~ galerie_25_2</button>
           <button class="gal-filter-btn" data-folder="galerie_30_1">~ galerie_30_1</button>
+          <input class="gal-search" id="gal-search" type="text" placeholder="Suche…">
         </div>
         <div class="gal-grid" id="gal-grid">
           <div class="gal-empty">Bilder werden geladen…</div>
@@ -1102,8 +1443,13 @@
       btn.addEventListener('click', () => {
         overlay.querySelectorAll('.gal-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        document.getElementById('gal-search').value = '';
         renderGallery(btn.dataset.folder);
       });
+    });
+    document.getElementById('gal-search').addEventListener('input', (e) => {
+      const activeFolder = overlay.querySelector('.gal-filter-btn.active') ?.dataset.folder || 'all';
+      renderGallery(activeFolder, e.target.value.trim());
     });
   }
 
@@ -1133,9 +1479,13 @@
     }
   }
 
-  function renderGallery(folder) {
+  function renderGallery(folder, search = '') {
     const grid = document.getElementById('gal-grid');
-    const list = folder === 'all' ? allImages : allImages.filter(i => i.folder === folder);
+    let list = folder === 'all' ? allImages : allImages.filter(i => i.folder === folder);
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(i => i.name.toLowerCase().includes(q));
+    }
     if (!list.length) {
       grid.innerHTML = '<div class="gal-empty">Keine Bilder</div>';
       return;
@@ -1151,7 +1501,7 @@
         <div class="gal-item-footer">
           <input class="gal-item-name" value="${img.name}" title="${img.name}"
             ${isUpload ? '' : 'readonly tabindex="-1"'}>
-          ${isUpload ? '<button class="gal-item-delete" title="Bild löschen">🗑</button>' : ''}
+          ${isUpload ? '<button class="gal-item-delete" title="Bild löschen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>' : ''}
         </div>
       </div>`;
     }).join('');
@@ -1223,59 +1573,149 @@
       if (folder === 'uploads' && deleteBtn) {
         deleteBtn.addEventListener('click', async (e) => {
           e.stopPropagation();
-          if (!confirm('Bild "' + item.dataset.name + '" wirklich löschen?')) return;
-          try {
-            const res = await fetch('/api/images/uploads/' + encodeURIComponent(item.dataset.name), {
-              method: 'DELETE'
-            });
-            if (res.ok) {
-              allImages = allImages.filter(i => i.url !== item.dataset.url);
-              item.remove();
-              showNotify('~ Gelöscht ~', 'success');
-            } else {
-              const data = await res.json();
-              showNotify('~ ' + (data.error || 'Fehler') + ' ~', 'error');
-            }
-          } catch {
-            showNotify('~ Fehler beim Löschen ~', 'error');
-          }
+          cmsConfirm('Bild "' + item.dataset.name + '" wirklich löschen?', async () => {
+            try {
+              const res = await fetch('/api/images/uploads/' + encodeURIComponent(item.dataset.name), {
+                method: 'DELETE'
+              });
+              if (res.ok) {
+                allImages = allImages.filter(i => i.url !== item.dataset.url);
+                item.remove();
+                showNotify('~ Gelöscht ~', 'success');
+              } else {
+                const data = await res.json();
+                showNotify('~ ' + (data.error || 'Fehler') + ' ~', 'error');
+              }
+            } catch { showNotify('~ Fehler beim Löschen ~', 'error'); }
+          }, 'danger');
         });
       }
     });
   }
 
+  // function selectImage(url) {
+  //   if (insertImgMode) {
+  //     // Bild an gespeicherter Cursorposition einfügen
+  //     insertImgMode = false;
+  //     const sel = window.getSelection();
+  //     if (savedRange) {
+  //       sel.removeAllRanges();
+  //       sel.addRange(savedRange);
+  //       savedRange = null;
+  //     }
+  //     const html = `<img src="${url}" alt="" style="max-width:100%;height:auto;display:block;margin:8px 0;" loading="lazy">`;
+  //     document.execCommand('insertHTML', false, html);
+  //     markUnsaved();
+  //     showNotify('~ Bild eingefügt ~', 'info');
+  //     closeGallery();
+  //     return;
+  //   }
+  //   if (currentImgTarget) {
+  //     currentImgTarget.src = url;
+  //     const link = currentImgTarget.closest('a[data-toggle="lightbox"], a[href]');
+  //     if (link) link.href = url;
+  //     markUnsaved();
+  //     showNotify('~ Bild ausgetauscht ~', 'info');
+  //   }
+  //   closeGallery();
+  // }
   function selectImage(url) {
+    if (currentImgTarget === '__col__') {
+      closeGallery();
+      const col = window.__colTarget; window.__colTarget = null; currentImgTarget = null;
+      if (!col) return;
+      const img = document.createElement('img');
+      img.src = url; img.alt = ''; img.classList.add('img-responsive');
+      img.style.cssText = 'max-width:100%;display:block;margin:0 auto;';
+      const ctrl = col.querySelector('.col-controls');
+      ctrl ? col.insertBefore(img, ctrl) : col.appendChild(img);
+      markUnsaved(); showNotify('~ Bild in Spalte eingefügt ~', 'success'); return;
+    }
+    // Wenn Galerie für neuen Bild-Block geöffnet wurde
+    if (currentImgTarget === '__cms-block__') {
+      closeGallery();
+      const box = getContentBox();
+      if (!box) return;
+      const div = document.createElement('div');
+      div.className = 'cms-block';
+      div.setAttribute('data-cms-block', '');
+      div.style.textAlign = 'center';
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = '';
+      img.style.cssText = 'max-width:100%;display:block;margin:0 auto;';
+      div.prepend(makeCmsUi(div));
+      div.appendChild(img);
+      box.appendChild(div);
+      markUnsaved();
+      showNotify('~ Bild-Block hinzugefügt ~', 'success');
+      return;
+    }
     if (insertImgMode) {
-      // Bild an gespeicherter Cursorposition einfügen
+      // Neues Bild einfügen (Standard mit Lightbox)
       insertImgMode = false;
-      const sel = window.getSelection();
-      if (savedRange) {
-        sel.removeAllRanges();
-        sel.addRange(savedRange);
-        savedRange = null;
-      }
-      const html = `<img src="${url}" alt="" style="max-width:100%;height:auto;display:block;margin:8px 0;" loading="lazy">`;
+      const html = `<a href="${url}" data-toggle="lightbox"><img src="${url}" alt="" style="max-width:100%;height:auto;display:block;margin:8px 0;" loading="lazy"></a>`;
       document.execCommand('insertHTML', false, html);
       markUnsaved();
-      showNotify('~ Bild eingefügt ~', 'info');
       closeGallery();
       return;
     }
+
     if (currentImgTarget) {
+      // 1. Das Bild auf der Seite wird immer getauscht
       currentImgTarget.src = url;
-      const link = currentImgTarget.closest('a[data-toggle="lightbox"], a[href]');
-      if (link) link.href = url;
+
+      // 2. Den umschließenden Link prüfen
+      let link = currentImgTarget.closest('a');
+
+      if (link) {
+        const href = link.getAttribute('href') || '';
+
+        // Filter-Logik: Was ist ein "Spezial-Link", den wir NICHT anfassen?
+        const isPdf = href.toLowerCase().endsWith('.pdf');
+        const isAnchor = href.includes('#');
+        const isExternal = link.getAttribute('rel') === 'external' || href.startsWith('http');
+        const isImage = /\.(jpg|jpeg|png|gif|webp|svg)($|\?)/i.test(href);
+
+        // Entscheidung:
+        if (isPdf || isAnchor || isExternal) {
+          // Diese Links lassen wir exakt so wie sie sind!
+          showNotify('~ Bild getauscht (Link-Ziel erhalten) ~', 'info');
+        } else if (isImage || href === '' || href === '#') {
+          // Nur wenn es ein Bild-Link ist, wird auch das Großbild-Ziel (href) angepasst
+          link.href = url;
+          link.setAttribute('data-toggle', 'lightbox');
+          showNotify('~ Bild & Lightbox aktualisiert ~', 'success');
+        }
+      } else {
+        // Gar kein Link da? Dann erstellen wir einen neuen Lightbox-Link
+        const newLink = document.createElement('a');
+        newLink.href = url;
+        newLink.setAttribute('data-toggle', 'lightbox');
+        currentImgTarget.parentNode.insertBefore(newLink, currentImgTarget);
+        newLink.appendChild(currentImgTarget);
+        showNotify('~ Lightbox-Link erstellt ~', 'success');
+      }
+
       markUnsaved();
-      showNotify('~ Bild ausgetauscht ~', 'info');
     }
     closeGallery();
+  }
+
+
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
   async function handleUpload(files) {
     if (!files ?.length) return;
     const zone = document.getElementById('gal-upload-zone');
     for (const file of files) {
-      zone.textContent = `${file.name} wird hochgeladen…`;
+      const sizeStr = formatFileSize(file.size);
+      zone.innerHTML = `<span style="color:#c4b47a">${file.name}</span> <span style="color:#604e14">(${sizeStr})</span> wird hochgeladen…`;
       const fd = new FormData();
       fd.append('image', file);
       try {
@@ -1290,7 +1730,7 @@
             folder: 'uploads',
             name: data.filename
           });
-          showNotify(`~ ${file.name} hochgeladen ~`, 'success');
+          showNotify(`~ ${file.name} (${sizeStr}) hochgeladen ~`, 'success');
         } else showNotify('~ Upload fehlgeschlagen ~', 'error');
       } catch {
         showNotify('~ Upload fehlgeschlagen ~', 'error');
@@ -1317,6 +1757,19 @@
     .forEach(sel => clone.querySelector(sel) ?.remove());
     // Termin-Löschen-Buttons aus dem gespeicherten HTML entfernen
     clone.querySelectorAll('.termin-delete').forEach(el => el.remove());
+    clone.querySelectorAll('.cms-block-ui').forEach(el => el.remove());
+    clone.querySelectorAll('.col-controls').forEach(el => el.remove());
+    clone.querySelectorAll('.col-placeholder').forEach(el => el.remove());
+    clone.querySelectorAll('[data-cms-block]').forEach(el => el.removeAttribute('data-cms-block'));
+    // cms-block Klasse nur entfernen wenn kein Originalinhalt (nicht row, termin etc.)
+    clone.querySelectorAll('.cms-block').forEach(el => {
+      if (!el.classList.contains('row') && !el.classList.contains('termin') && !el.classList.contains('nachruf')) {
+        el.classList.remove('cms-block');
+      }
+    });
+    clone.querySelector('#playground-banner') ?.remove();
+    clone.querySelectorAll('.playground-section-label').forEach(el => el.remove());
+    clone.querySelectorAll('[data-cms-block]').forEach(el => el.removeAttribute('data-cms-block'));
     // Firefox moz-extension Scripts entfernen
     clone.querySelectorAll('script[src*="moz-extension"]').forEach(el => el.remove());
     clone.querySelectorAll('script[src*="admin-edit"]').forEach(el => el.remove());
@@ -1388,7 +1841,10 @@
   }
 
   function discardChanges() {
-    if (hasUnsavedChanges && !confirm('Alle Änderungen verwerfen und Seite neu laden?')) return;
+    if (hasUnsavedChanges) {
+      cmsConfirm('Alle Änderungen verwerfen und Seite neu laden?', () => { hasUnsavedChanges = false; location.reload(); }, 'danger');
+      return;
+    }
     window.location.reload();
   }
 
@@ -1440,14 +1896,12 @@
       if (existing) existing.remove();
       const btn = document.createElement('button');
       btn.className = 'termin-delete';
-      btn.textContent = '✕ Termin löschen';
+      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Termin löschen';
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (confirm('Diesen Termin wirklich löschen?')) {
-          row.remove();
-          markUnsaved();
-          showNotify('~ Termin gelöscht ~', 'info');
-        }
+        cmsConfirm('Diesen Termin wirklich löschen?', () => {
+          row.remove(); markUnsaved(); showNotify('~ Termin gelöscht ~', 'info');
+        }, 'danger');
       });
       row.appendChild(btn);
     });
@@ -1456,7 +1910,7 @@
   function addNewTermin() {
     const contentBox = document.getElementById('wrapper-content-box');
     if (!contentBox) {
-      alert('content-box nicht gefunden');
+      cmsAlert('Inhalt-Container nicht gefunden.');
       return;
     }
 
@@ -1469,7 +1923,7 @@
     <div class="col-md-8 col-sm-8">
       <p contenteditable="true" style="text-align:left!important">Beschreibung des Auftritts</p>
     </div>
-    <button class="termin-delete">✕ Termin löschen</button>`;
+    <button class="termin-delete"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Termin löschen</button>`;
 
     // Direkt in contentBox anhängen – kein .after(), kein Suchen
     const allTermine = [...contentBox.querySelectorAll('.row.termin')];
@@ -1480,11 +1934,9 @@
     }
 
     newBlock.querySelector('.termin-delete').addEventListener('click', () => {
-      if (confirm('Diesen Termin wirklich löschen?')) {
-        newBlock.remove();
-        markUnsaved();
-        showNotify('~ Termin gelöscht ~', 'info');
-      }
+      cmsConfirm('Diesen Termin wirklich löschen?', () => {
+        newBlock.remove(); markUnsaved(); showNotify('~ Termin gelöscht ~', 'info');
+      }, 'danger');
     });
 
     const dateField = newBlock.querySelector('p.grau');
@@ -1505,5 +1957,544 @@
   // ─── Start ────────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+
+  // ── Block-System (Drag & Drop, Hinzufügen, Löschen, Split) ─────────────────
+  let sortableInstance = null;
+
+  function getContentBox() {
+    return document.getElementById('wrapper-content-box') || document.getElementById('wrapper-box');
+  }
+
+  function makeCmsUi(block) {
+    const ui = document.createElement('div');
+    ui.className = 'cms-block-ui';
+    const hasImg = !!block.querySelector('img');
+
+    ui.innerHTML = `
+      ${hasImg ? '<button class="cms-ui-btn scale-btn" title="Bildgröße"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg> Größe</button>' : ''}
+      <button class="cms-ui-btn drag-handle" title="Verschieben"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg> Verschieben</button>
+      <button class="cms-ui-btn link-btn" ${!hasImg ? 'disabled' : ''} title="${hasImg ? 'Link hinzufügen' : 'Kein Bild vorhanden'}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Link</button>
+      <button class="cms-ui-btn split-btn"   title="Zweispaltig"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/></svg> Spalten</button>
+      <button class="cms-ui-btn del-btn"     title="Block löschen"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Block löschen</button>`;
+
+    // Skala-Button Handler
+    ui.querySelector('.scale-btn')?.addEventListener('click', () => {
+      const img = block.querySelector('img');
+      if (img) window.openImgScale?.(img);
+    });
+
+    // Link Button Handler
+    const linkBtn = ui.querySelector('.link-btn');
+    linkBtn.addEventListener('click', () => {
+      const img = block.querySelector('img');
+      if (!img) return;
+
+      const parentA = img.closest('a');
+      const existingUrl = parentA ? parentA.getAttribute('href') : '';
+
+      const lOl = document.createElement('div');
+      lOl.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;';
+      lOl.innerHTML = `
+        <div style="background:#1e1208;border:1px solid #604e14;border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-family:Arial,sans-serif;">
+          <h3 style="color:#c4b47a;font-size:14px;margin-bottom:18px;letter-spacing:1px;text-align:center;">~ Bild-Link ${existingUrl ? 'bearbeiten' : 'hinzufügen'} ~</h3>
+          <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">URL</label>
+          <input id="img-link-url" type="url" value="${existingUrl || 'https://'}" style="width:100%;background:#0e0906;border:1px solid #604e14;border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;">
+          ${existingUrl ? '<button id="img-link-remove" style="margin-top:10px;padding:6px 12px;background:transparent;border:1px solid #7a1a1a;color:#c97070;border-radius:4px;cursor:pointer;font-size:12px;">Link entfernen</button>' : ''}
+          <div style="display:flex;gap:10px;margin-top:20px;">
+            <button id="img-link-cancel" class="pw-modal-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:transparent;color:#a19d91;letter-spacing:1px;">Abbrechen</button>
+            <button id="img-link-save" class="pw-modal-save" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:#604e14;color:#e8dfc8;letter-spacing:1px;">Speichern</button>
+          </div>
+        </div>`;
+      document.body.appendChild(lOl);
+      const inp = document.getElementById('img-link-url');
+      inp.focus();
+      inp.select();
+
+      const close = () => lOl.remove();
+      document.getElementById('img-link-cancel').addEventListener('click', close);
+      lOl.addEventListener('click', e => {
+        if (e.target === lOl) close();
+      });
+
+      // Link entfernen
+      const removeBtn = document.getElementById('img-link-remove');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', () => {
+          if (parentA) parentA.replaceWith(img);
+          markUnsaved();
+          close();
+          // UI aktualisieren
+          const newUi = makeCmsUi(block);
+          block.insertBefore(newUi, block.firstChild);
+        });
+      }
+
+      // Link speichern
+      document.getElementById('img-link-save').addEventListener('click', () => {
+        const url = inp.value.trim();
+        if (!url || url === 'https://') {
+          if (parentA) parentA.replaceWith(img);
+        } else if (parentA) {
+          parentA.href = url;
+          parentA.target = '_blank';
+          parentA.rel = 'noopener noreferrer';
+        } else {
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          img.replaceWith(a);
+          a.appendChild(img);
+        }
+        markUnsaved();
+        close();
+      });
+
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('img-link-save').click();
+      });
+    });
+
+    // Split
+    ui.querySelector('.split-btn').addEventListener('click', () => splitBlock(block));
+    // Löschen
+    ui.querySelector('.del-btn').addEventListener('click', () => {
+      cmsConfirm('Diesen Block löschen?', () => { block.remove(); markUnsaved(); }, 'danger');
+    });
+    return ui;
+  }
+
+  // Bootstrap 12-Grid gleichmäßig verteilen
+  function rebalanceCols(row) {
+    const cols = Array.from(row.querySelectorAll(':scope > [class*="col-"]'));
+    if (!cols.length) return;
+    const n = cols.length;
+    const w = n <= 1 ? 12 : n === 2 ? 6 : n === 3 ? 4 : n === 4 ? 3 : 2;
+    const sm = Math.min(w * 2, 12);
+    cols.forEach(col => {
+      col.className = col.className
+        .replace(/\bcol-md-\d+\b/g, `col-md-${w}`)
+        .replace(/\bcol-sm-\d+\b/g, `col-sm-${sm}`);
+      if (!/col-md-/.test(col.className)) col.classList.add(`col-md-${w}`);
+    });
+  }
+
+  // Placeholder-HTML für neue leere Spalte
+  function colPlaceholderHtml() {
+    return `<div class="col-placeholder">
+      <div class="col-placeholder-label">Inhalt wählen</div>
+      <div class="col-placeholder-btns">
+        <button class="col-add-btn ph-text-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Text</button>
+        <button class="col-add-btn ph-img-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Bild</button>
+      </div>
+    </div>`;
+  }
+
+  // Placeholder-Listener für eine Spalte registrieren
+  function initColPlaceholder(col) {
+    col.querySelector('.ph-text-btn')?.addEventListener('click', () => {
+      col.querySelector('.col-placeholder')?.remove();
+      const p = document.createElement('p');
+      p.setAttribute('contenteditable', 'true'); p.textContent = 'Neuer Text…';
+      p.addEventListener('input', markUnsaved);
+      p.addEventListener('mouseup', showToolbarForSelection);
+      p.addEventListener('keyup', showToolbarForSelection);
+      const ctrl = col.querySelector('.col-controls');
+      ctrl ? col.insertBefore(p, ctrl) : col.appendChild(p);
+      p.focus(); markUnsaved();
+    });
+    col.querySelector('.ph-img-btn')?.addEventListener('click', () => {
+      col.querySelector('.col-placeholder')?.remove();
+      currentImgTarget = '__col__';
+      window.__colTarget = col;
+      openGallery('__col__');
+    });
+  }
+
+  // Spalten-Controls für eine Spalte
+  function makeColControls(col, parentRow) {
+    const ctrl = document.createElement('div');
+    ctrl.className = 'col-controls';
+    ctrl.innerHTML = `
+      <button class="col-ctrl-btn add-text-btn" title="Text hinzufügen"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Text</button>
+      <button class="col-ctrl-btn add-img-btn"  title="Bild hinzufügen"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Bild</button>
+      <button class="col-ctrl-btn del-col"      title="Spalte entfernen"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Spalte</button>`;
+
+    ctrl.querySelector('.add-text-btn').addEventListener('click', () => {
+      const p = document.createElement('p');
+      p.setAttribute('contenteditable', 'true'); p.textContent = 'Neuer Text…';
+      p.addEventListener('input', markUnsaved);
+      p.addEventListener('mouseup', showToolbarForSelection);
+      p.addEventListener('keyup', showToolbarForSelection);
+      col.querySelector('.col-placeholder')?.remove();
+      col.insertBefore(p, ctrl); p.focus(); markUnsaved();
+    });
+    ctrl.querySelector('.add-img-btn').addEventListener('click', () => {
+      col.querySelector('.col-placeholder')?.remove();
+      currentImgTarget = '__col__'; window.__colTarget = col;
+      openGallery('__col__');
+    });
+    ctrl.querySelector('.del-col').addEventListener('click', () => {
+      const cols = Array.from(parentRow.querySelectorAll(':scope > [class*="col-"]'));
+      if (cols.length <= 1) { showNotify('~ Letzte Spalte kann nicht entfernt werden ~', 'info'); return; }
+      cmsConfirm('Diese Spalte und ihren Inhalt entfernen?', () => {
+        col.remove();
+        rebalanceCols(parentRow);
+        // Wenn nur noch 1 Spalte: Row auflösen, Block-UI wiederherstellen
+        const rem = Array.from(parentRow.querySelectorAll(':scope > [class*="col-"]'));
+        if (rem.length === 1 && parentRow.classList.contains('cms-block')) {
+          const lastCol = rem[0];
+          const nodes = Array.from(lastCol.childNodes)
+            .filter(n => !n.classList?.contains('col-controls') && !n.classList?.contains('col-placeholder'));
+          const frag = document.createDocumentFragment();
+          nodes.forEach(n => frag.appendChild(n.cloneNode(true)));
+          parentRow.classList.remove('row');
+          parentRow.innerHTML = '';
+          parentRow.appendChild(frag);
+          parentRow.prepend(makeCmsUi(parentRow));
+          // Split-Btn zurücksetzen
+          const sb = parentRow.querySelector(':scope > .cms-block-ui .split-btn');
+          if (sb) { sb.title = 'Zweispaltig'; delete sb.dataset.patched; sb.onclick = null; }
+          parentRow.querySelectorAll('p,h1,h2,h3,li,td').forEach(el => {
+            if (!el.closest('[contenteditable="true"]')) {
+              el.setAttribute('contenteditable', 'true');
+              el.addEventListener('input', markUnsaved);
+              el.addEventListener('mouseup', showToolbarForSelection);
+              el.addEventListener('keyup', showToolbarForSelection);
+            }
+          });
+        }
+        markUnsaved();
+      }, 'danger');
+    });
+    return ctrl;
+  }
+
+  // Neue Spalte zu bestehendem Row hinzufügen
+  function addColToRow(row) {
+    const newCol = document.createElement('div');
+    newCol.className = 'col-md-6'; // wird durch rebalance überschrieben
+    newCol.innerHTML = colPlaceholderHtml();
+    row.appendChild(newCol);
+    rebalanceCols(row); // ALLE Spalten gleichzeitig anpassen
+    initColPlaceholder(newCol);
+    newCol.appendChild(makeColControls(newCol, row));
+    markUnsaved();
+  }
+
+  function splitBlock(block) {
+    const uiEl = block.querySelector(':scope > .cms-block-ui');
+    if (uiEl) uiEl.remove();
+    const savedHtml = block.innerHTML;
+
+    block.classList.add('row');
+    block.innerHTML = `
+      <div class="col-md-6">${savedHtml}</div>
+      <div class="col-md-6">${colPlaceholderHtml()}</div>`;
+
+    block.querySelectorAll(':scope > [class*="col-"]').forEach(col => {
+      col.querySelectorAll('p,h1,h2,h3,li,td').forEach(el => {
+        if (!el.closest('[contenteditable="true"]')) {
+          el.setAttribute('contenteditable', 'true');
+          el.addEventListener('input', markUnsaved);
+          el.addEventListener('mouseup', showToolbarForSelection);
+          el.addEventListener('keyup', showToolbarForSelection);
+        }
+      });
+      initColPlaceholder(col);
+      col.appendChild(makeColControls(col, block));
+    });
+
+    rebalanceCols(block); // Beide Spalten auf col-md-6 setzen
+
+    // Block-UI wieder auf Row setzen, Split-Btn → + Spalte
+    block.prepend(makeCmsUi(block));
+    const splitBtn = block.querySelector(':scope > .cms-block-ui .split-btn');
+    if (splitBtn && !splitBtn.dataset.patched) {
+      splitBtn.dataset.patched = '1';
+      splitBtn.title = 'Spalte hinzufügen';
+      splitBtn.onclick = (e) => { e.stopPropagation(); addColToRow(block); };
+    }
+    markUnsaved();
+  }
+
+  function initBlockSystem() {
+    const box = getContentBox();
+    if (!box) return;
+
+    // SortableJS laden (einmalig)
+    function setupSortable() {
+      if (sortableInstance) sortableInstance.destroy();
+      sortableInstance = Sortable.create(box, {
+        handle: '.drag-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        draggable: '.cms-block',
+        onEnd: markUnsaved,
+      });
+    }
+
+    if (typeof Sortable === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js';
+      s.onload = setupSortable;
+      document.head.appendChild(s);
+    } else {
+      setupSortable();
+    }
+
+    // Alle direkten Kinder mit cms-block und UI ausstatten
+    Array.from(box.children).forEach(child => {
+      if (child.id && child.id.startsWith('admin-')) return;
+      if (child.querySelector(':scope > .cms-block-ui')) return;
+      if (!child.classList.contains('cms-block')) {
+        child.classList.add('cms-block'); child.setAttribute('data-cms-block', '');
+      }
+      child.prepend(makeCmsUi(child));
+      // Wenn bereits Row: Controls + patched Split-Btn
+      if (child.classList.contains('row')) {
+        child.querySelectorAll(':scope > [class*="col-"]').forEach(col => {
+          if (!col.querySelector(':scope > .col-controls'))
+            col.appendChild(makeColControls(col, child));
+          initColPlaceholder(col);
+        });
+        const sb = child.querySelector(':scope > .cms-block-ui .split-btn');
+        if (sb && !sb.dataset.patched) {
+          sb.dataset.patched = '1'; sb.title = 'Spalte hinzufügen';
+          sb.onclick = (e) => { e.stopPropagation(); addColToRow(child); };
+        }
+      }
+    });
+
+    // + Text Button
+    const btnText = document.getElementById('btn-add-block-text');
+    if (btnText) {
+      btnText._handler = () => {
+        const div = document.createElement('div');
+        div.className = 'cms-block';
+        div.setAttribute('data-cms-block', '');
+        const p = document.createElement('p');
+        p.setAttribute('contenteditable', 'true');
+        p.textContent = 'Neuer Text…';
+        p.addEventListener('input', markUnsaved);
+        p.addEventListener('mouseup', showToolbarForSelection);
+        p.addEventListener('keyup', showToolbarForSelection);
+        div.prepend(makeCmsUi(div));
+        div.appendChild(p);
+        box.appendChild(div);
+        p.focus();
+        // Sortable kennt neues Element automatisch
+        markUnsaved();
+        showNotify('~ Textfeld hinzugefügt ~', 'success');
+      };
+      btnText.addEventListener('click', btnText._handler);
+    }
+
+    // + Bild-Block Button
+    const btnImg = document.getElementById('btn-add-block-img');
+    if (btnImg) {
+      btnImg._handler = () => {
+        openGallery('__cms-block__');
+      };
+      btnImg.addEventListener('click', btnImg._handler);
+    }
+
+    // + Trennlinie Button
+    const btnLine = document.getElementById('btn-add-block-line');
+    if (btnLine) {
+      btnLine._handler = () => {
+        const div = document.createElement('div');
+        div.className = 'cms-block';
+        div.setAttribute('data-cms-block', '');
+        div.style.textAlign = 'center';
+        const img = document.createElement('img');
+        img.src = '/images/haarlinie.webp';
+        img.onerror = () => {
+          img.src = '/images/haarlinie.png';
+        };
+        img.alt = '';
+        img.style.cssText = 'max-width:100%;display:block;margin:0 auto;';
+        div.prepend(makeCmsUi(div));
+        div.appendChild(img);
+        box.appendChild(div);
+        markUnsaved();
+        showNotify('~ Trennlinie hinzugefügt ~', 'success');
+      };
+      btnLine.addEventListener('click', btnLine._handler);
+    }
+
+    // + Abstand Button
+    const btnSpacer = document.getElementById('btn-add-block-spacer');
+    if (btnSpacer) {
+      btnSpacer._handler = () => {
+        const div = document.createElement('div');
+        div.className = 'cms-block';
+        div.setAttribute('data-cms-block', '');
+        const spacer = document.createElement('div');
+        spacer.className = 'spacer_break';
+        div.prepend(makeCmsUi(div));
+        div.appendChild(spacer);
+        box.appendChild(div);
+        markUnsaved();
+        showNotify('~ Abstand hinzugefügt ~', 'success');
+      };
+      btnSpacer.addEventListener('click', btnSpacer._handler);
+    }
+  }
+
+  function destroyBlockSystem() {
+    if (sortableInstance) {
+      sortableInstance.destroy();
+      sortableInstance = null;
+    }
+    // UI-Elemente entfernen
+    document.querySelectorAll('.cms-block-ui').forEach(el => el.remove());
+    document.querySelectorAll('.col-controls').forEach(el => el.remove());
+    document.querySelectorAll('.col-placeholder').forEach(el => el.remove());
+    document.querySelectorAll('[data-cms-block]').forEach(el => {
+      el.removeAttribute('data-cms-block');
+      el.classList.remove('cms-block');
+    });
+    // Listener entfernen
+    ['btn-add-block-text', 'btn-add-block-img', 'btn-add-block-line', 'btn-add-block-spacer'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn ?._handler) btn.removeEventListener('click', btn._handler);
+    });
+  }
+
+  // ── Custom Confirm / Alert ───────────────────────────────────────────────────
+  (function setupCmsDialog() {
+    const ov = document.createElement('div');
+    ov.id = 'cms-dialog-overlay';
+    ov.innerHTML = `<div id="cms-dialog-box">
+      <div id="cms-dialog-msg"></div>
+      <div id="cms-dialog-btns"></div>
+    </div>`;
+    document.body.appendChild(ov);
+  })();
+
+  // cmsConfirm(msg, onOk, style='confirm') – style: 'confirm' | 'danger'
+  function cmsConfirm(msg, onOk, style = 'confirm') {
+    const ov  = document.getElementById('cms-dialog-overlay');
+    const msgEl = document.getElementById('cms-dialog-msg');
+    const btns  = document.getElementById('cms-dialog-btns');
+    msgEl.textContent = msg;
+    btns.innerHTML = `
+      <button class="cms-dialog-btn cancel" id="cms-dlg-cancel">Abbrechen</button>
+      <button class="cms-dialog-btn ${style}" id="cms-dlg-ok">${style === 'danger' ? 'Löschen' : 'OK'}</button>`;
+    ov.classList.add('open');
+    const close = () => ov.classList.remove('open');
+    document.getElementById('cms-dlg-cancel').onclick = close;
+    ov.onclick = e => { if (e.target === ov) close(); };
+    document.getElementById('cms-dlg-ok').onclick = () => { close(); onOk(); };
+  }
+
+  function cmsAlert(msg) {
+    const ov  = document.getElementById('cms-dialog-overlay');
+    document.getElementById('cms-dialog-msg').textContent = msg;
+    const btns = document.getElementById('cms-dialog-btns');
+    btns.innerHTML = `<button class="cms-dialog-btn confirm" id="cms-dlg-ok" style="max-width:120px;margin:0 auto;">OK</button>`;
+    ov.classList.add('open');
+    document.getElementById('cms-dlg-ok').onclick = () => ov.classList.remove('open');
+    ov.onclick = e => { if (e.target === ov) ov.classList.remove('open'); };
+  }
+
+  // ── Bild-Skala ─────────────────────────────────────────────────────────────
+  (function initImgScale() {
+    const bar = document.createElement('div');
+    bar.id = 'img-scale-bar';
+    bar.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg> Größe
+      <input type="range" id="img-scale-slider" min="10" max="100" value="100" step="5">
+      <span id="img-scale-val">100%</span>`;
+    document.body.appendChild(bar);
+    let scaleImg = null;
+    window.openImgScale = (img) => {
+      scaleImg = img;
+      const cur = parseInt(img.style.maxWidth) || 100;
+      document.getElementById('img-scale-slider').value = cur;
+      document.getElementById('img-scale-val').textContent = cur + '%';
+      const r = img.getBoundingClientRect();
+      bar.style.top = (r.bottom + 6) + 'px';
+      bar.style.left = r.left + 'px';
+      bar.classList.add('visible');
+    };
+    window.closeImgScale = () => { bar.classList.remove('visible'); scaleImg = null; };
+    document.getElementById('img-scale-slider').addEventListener('input', (e) => {
+      if (!scaleImg) return;
+      scaleImg.style.maxWidth = e.target.value + '%';
+      document.getElementById('img-scale-val').textContent = e.target.value + '%';
+      markUnsaved();
+    });
+    document.addEventListener('mousedown', (e) => {
+      if (!bar.contains(e.target) && !e.target.closest('.cms-block-ui')) window.closeImgScale?.();
+    });
+  })();
+
+  // ── Backup-Modal ─────────────────────────────────────────────────────────────
+  (function setupBackupModal() {
+    const ov = document.createElement('div');
+    ov.id = 'backup-modal-overlay';
+    ov.innerHTML = `<div id="backup-modal">
+      <h3><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.34L1 10"/></svg> Verlauf: <span id="backup-modal-filename"></span></h3>
+      <div id="backup-list"><div class="backup-empty">Lade…</div></div>
+      <button id="backup-close-btn">Schließen</button>
+    </div>`;
+    document.body.appendChild(ov);
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+    document.getElementById('backup-close-btn').addEventListener('click', () => ov.classList.remove('open'));
+  })();
+
+  async function openBackupModal() {
+    const ov = document.getElementById('backup-modal-overlay');
+    document.getElementById('backup-modal-filename').textContent = currentFile;
+    document.getElementById('backup-list').innerHTML = '<div class="backup-empty">Lade…</div>';
+    ov.classList.add('open');
+
+    try {
+      const res = await fetch('/api/backups/' + encodeURIComponent(currentFile), {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      const list = document.getElementById('backup-list');
+      if (!data.backups?.length) {
+        list.innerHTML = '<div class="backup-empty">Keine Sicherungen vorhanden.</div>'; return;
+      }
+      list.innerHTML = data.backups.map(b =>
+        `<div class="backup-item">
+          <span class="backup-item-date">${b.date}</span>
+          <button class="backup-restore-btn" data-name="${b.name}">Wiederherstellen</button>
+        </div>`
+      ).join('');
+      list.querySelectorAll('.backup-restore-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          cmsConfirm('Diese Sicherung wiederherstellen? Aktuelle Version wird als neue Sicherung gespeichert.', async () => {
+            btn.disabled = true; btn.textContent = '…';
+            try {
+              const r2 = await fetch('/api/restore-backup', {
+                method: 'POST', credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: currentFile, backupName: btn.dataset.name })
+              });
+              const d2 = await r2.json();
+              if (d2.success) {
+                ov.classList.remove('open');
+                showNotify('~ Sicherung wiederhergestellt – Seite wird neu geladen ~', 'success');
+                setTimeout(() => location.reload(), 1500);
+              } else {
+                showNotify('~ Fehler: ' + (d2.error || 'Unbekannt') + ' ~', 'error');
+                btn.disabled = false; btn.textContent = 'Wiederherstellen';
+              }
+            } catch { showNotify('~ Server nicht erreichbar ~', 'error'); btn.disabled = false; btn.textContent = 'Wiederherstellen'; }
+          });
+        });
+      });
+    } catch { document.getElementById('backup-list').innerHTML = '<div class="backup-empty">Fehler beim Laden.</div>'; }
+  }
+
+  // ── Session-Timeout Warnung (nach 7h50min, Token läuft nach 8h ab) ────────
+  setTimeout(() => {
+    showNotify('~ Session läuft in 10 Minuten ab – bitte speichern & neu einloggen ~', 'error');
+  }, (8 * 60 - 10) * 60 * 1000);
 
 })();

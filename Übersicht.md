@@ -1,111 +1,194 @@
-## Dokumentation www.zum-geruecht.de
----
-## Was ursprünglich beauftragt wurde
+# Zum Gerücht – CMS & Website Projektübersicht
 
-Ursprünglich sollte es nur **ein CMS** werden, damit Texte/Bilder/Termine etc. ohne externe Hilfe geändert werden können.
-
-> Die Website lief auf einem veralteten PHP-Server ohne jegliche Backend-Infrastruktur. Ein modernes CMS benötigt zwingend ein Backend – also einen eigenen Server, eine Authentifizierung, eine API.
-Anstatt ein halbfertiges System zu liefern, hab ich die gesamte technische Basis neu gebaut – und dabei wurden alle anderen sichtbaren Schwachstellen/Fehler der Website gleich mitbehoben. 
+## Projektzeitraum
+Ca. 2 Wochen, täglich ~4 Stunden Entwicklungsarbeit
 
 ---
 
-## Was wurde gebaut – und warum war es notwendig
+## Technologie-Stack
 
-### Backend & Server (Grundvoraussetzung für alles andere)
-
-| Was | Warum notwendig |
-|-----|-----------------|
-| Node.js/Express Server | Ohne Server keine Möglichkeit, Inhalte zu speichern oder zu schützen |
-| Sicherer Admin-Login (JWT) | Ohne Login kann jeder die Website verändern |
-| Brute-Force-Schutz | Ohne Schutz ist das Passwort in Minuten knackbar |
-| Automatische Backups | Ohne Backup ist eine versehentliche Löschung nicht rückgängig machbar |
-| WebP-Bildkonvertierung | Bilder werden automatisch komprimiert – Ladezeit halbiert sich |
-
-### CMS – Content Managemant System
-
-| Was | Konkreter Nutzen |
-|-----|-----------------|
-| Texte direkt anklicken & ändern | Neuer Konzerttermin? 30 Sekunden, kein Anruf nötig |
-| Bilder tauschen per Klick | Saisonale Fotos aktuell halten ohne externe Hilfe |
-| Bilder hochladen per Drag & Drop | So einfach wie ein Foto per WhatsApp schicken |
-| Bilder umbenennen & löschen | Ordnung in der Galerie ohne FTP-Zugang |
-| Rückgängig & Verwerfen | Fehler passieren – hier sind sie kein Problem |
-| Speichern mit einem Klick | Änderungen sind sofort live |
-| **Funktioniert auf Handy** | Schnell etwas ändern auch unterwegs |
-
-### Was zusätzlich behoben wurde – ohne Mehrkosten
-
-| Problem | Was es heißt |
-|---------|----------------------|
-| Kein Social-Media-Vorschaubild | Beim Teilen in WhatsApp/Facebook erschien nur ein Link |
-| Keine Sitemap | Google wusste nicht welche Seiten existieren |
-| Keine Clean URLs | /speisekarte.html statt /speisekarte – wirkt veraltet |
-| Ladezeit-Probleme | 58 Bilder wurden gleichzeitig geladen – auf Handy teils 10+ Sekunden |
-| Veraltetes Kontaktformular | Optisch nicht zur Website passend, keine Spam-Absicherung |
+| Schicht | Technologie |
+|---|---|
+| Server | Node.js + Express |
+| Auth | bcrypt + HTTP-only Cookies + JWT |
+| Frontend | Vanilla JS (kein Framework) |
+| Styling | Bootstrap 3 + Custom CSS |
+| Bilder | Sharp (WebP-Konvertierung serverseitig) |
+| Drag & Drop | SortableJS (CDN) |
+| Hosting | Hetzner (empfohlen) |
 
 ---
 
-## Was das in Zahlen bedeutet
+## Dateistruktur
 
-### Agenturvergleich
-| Leistung | Marktpreis Agentur |
-|----------|--------------------|
-| Backend + Server + Login + Sicherheit | 1.200 – 2.500 € |
-| Individuelles CMS (Text + Bild + Galerie) | 2.500 – 4.500 € |
-| Mobile Admin-Oberfläche | 300 – 600 € |
-| SEO-Optimierung (Sitemap, OG-Tags, Clean URLs) | 500 – 900 € |
-| Technische Bereinigung + Performance | 300 – 600 € |
-| Formular-Redesign + Sicherheit | 200 – 400 € |
-| **Gesamt** | **5.000 – 9.500 €** |
-
----
-
-## Preis
-
-**1.000 €**
-
----
-
-## Nach der Einigung – was passiert als nächstes
-
-### Was du als Entwickler erledigst (ca. 1–2 Stunden)
-1. **Hosting einrichten** – Hetzner Cloud VPS, ca. 4 €/Monat, DSGVO-konform in Deutschland
-2. **SSL-Zertifikat** – kostenlos über Let's Encrypt, HTTPS aktivieren
-3. **E-Mail-Versand einrichten** – damit Reservierungsanfragen ankommen (dazu brauchst du vom Betreiber: E-Mail-Anbieter, Adresse und Passwort)
-4. **Alle Dateien deployen** – Website auf den neuen Server laden
-5. **Domain umstellen** – DNS-Eintrag auf neuen Server zeigen lassen (der Betreiber muss einmalig in seinem Domain-Account den Nameserver ändern oder einen A-Record setzen)
-
-### Was der Betreiber bereitstellt
-- E-Mail-Zugangsdaten für Reservierungsanfragen (SMTP)
-- Zugang zur Domain-Verwaltung (Strato, IONOS o.ä.) für DNS-Umstellung
-- Einmalig das Admin-Passwort festlegen
-
-### Was du dem Betreiber nach Übergabe erklärst (15 Minuten)
-1. Wie man sich einloggt (Footer-Link "~ Admin ~", Passwort eingeben)
-2. Wie man einen Text ändert (klicken, tippen, speichern)
-3. Wie man ein Bild tauscht (auf Bild klicken, neues auswählen oder hochladen)
-4. Wie man sich ausloggt
-
-Das war's. Der Rest erschließt sich von selbst.
+```
+/
+├── server.js               – Express-Backend, alle API-Routen
+├── public/
+│   ├── index.html          – Startseite
+│   ├── termine.html        – Veranstaltungen
+│   ├── speisekarte.html    – Speisekarte
+│   ├── mediathek.html      – Fotogalerie
+│   ├── anfrage.html        – Reservierungsanfrage
+│   ├── impressum.html
+│   ├── datenschutz.html
+│   ├── js/
+│   │   └── admin-edit.js   – Komplettes CMS-Frontend
+│   ├── css/
+│   │   ├── zum-geruecht.css
+│   │   └── bootstrap.css
+│   ├── images/             – Statische Bilder
+│   └── images/uploads/     – Hochgeladene Bilder (WebP)
+├── backups/                – Automatische HTML-Sicherungen (max. 10/Seite)
+└── .env                    – ADMIN_PASSWORD_HASH, JWT_SECRET, PORT
+```
 
 ---
 
-## Laufende Kosten für den Betreiber
+## Backend – API-Routen
 
-| Was | Kosten |
-|-----|--------|
-| Hetzner VPS (Server) | 3,79 €/Monat |
-| Domain (falls vorhanden) | 0 € |
-| SSL-Zertifikat | 0 € |
-| **Gesamt** | **ca. 4 €/Monat** |
+| Methode | Route | Auth | Beschreibung |
+|---|---|---|---|
+| POST | `/api/login` | – | Login mit bcrypt-Hash, setzt HTTP-only Cookie |
+| POST | `/api/logout` | ✓ | Löscht Session-Cookie |
+| GET | `/api/check-auth` | ✓ | Prüft ob Session gültig |
+| POST | `/api/save-html` | ✓ | Seite speichern + Backup erstellen |
+| GET | `/api/images` | ✓ | Alle Bilder auflisten (mit Metadaten) |
+| POST | `/api/upload-image` | ✓ | Bild hochladen + WebP-Konvertierung |
+| DELETE | `/api/images/uploads/:name` | ✓ | Bild löschen |
+| POST | `/api/upload-pdf` | ✓ | PDF für Speisekarte hochladen |
+| GET | `/api/backups/:filename` | ✓ | Sicherungen einer Seite auflisten |
+| POST | `/api/restore-backup` | ✓ | Sicherung wiederherstellen |
+| POST | `/api/change-password` | ✓ | Passwort ändern |
+
+**Sicherheit:** Brute-Force-Schutz (5 Versuche, 15 Min. Sperre), Helmet.js Security-Headers, Path-Traversal-Schutz auf allen Dateioperationen, Trust-Proxy-Konfiguration für Hetzner.
 
 ---
 
-## Empfehlung für nach der Übergabe (optional, kein Muss)
+## CMS-Frontend (admin-edit.js)
 
-- **Google Search Console** – Sitemap einreichen damit Google die Seite schneller indexiert (kostenlos, 5 Minuten)
-- **Matomo Analytics** – DSGVO-konforme Besucherstatistiken (kostenlos selbst hostbar)
+Die gesamte Admin-Logik ist in einer einzigen Datei (`admin-edit.js`) gebündelt, die nur eingeloggten Admins ausgeliefert wird.
+
+### Login & Session
+- Versteckter Footer-Link (`~ Admin ~`) öffnet Login-Modal
+- Session läuft nach 8 Stunden ab (Warnung nach 7h50min)
+- Passwort ändern direkt aus der Admin-Bar
+
+### Admin-Bar
+Erscheint nach Login oben am Bildschirm. Enthält:
+`Bearbeiten` · `Rückgängig` · `Verwerfen` · `Speichern` · `Abmelden` · `PDF ändern` (nur Speisekarte) · `+ Text` · `+ Bild` · `+ Trennlinie` · `+ Abstand` · `Passwort ändern` · `Verlauf`
+
+### CMS Block-System
+Jeder Inhaltsbereich ist ein **CMS-Block**. Beim Bearbeiten erscheint pro Block eine schwebende Leiste mit:
+
+| Button | Funktion |
+|---|---|
+| ⠿ Verschieben | Drag & Drop (SortableJS) |
+| Größe | Bild-Skalierung (Slider 10–100%) – nur bei Bild-Blocks |
+| Link | Bild-Link setzen / bearbeiten / entfernen – nur bei Bild-Blocks |
+| Spalten | Block in 2 Spalten aufteilen (danach: `+ Spalte`) |
+| Block löschen | Entfernt den Block nach Bestätigung |
+
+#### Spalten-System
+- Erste Klick auf „Spalten": teilt Block in 2 gleichgroße Spalten
+- Jeder weitere Klick auf „+ Spalte": fügt **eine** neue Spalte hinzu
+- Bootstrap-Grid wird automatisch gleichmäßig verteilt: 2→col-6, 3→col-4, 4→col-3
+- Jede Spalte hat eigene Controls: `+ Text`, `+ Bild`, `Spalte entfernen`
+- Letzte verbleibende Spalte: Row wird aufgelöst, Block-UI wiederhergestellt
+
+#### Block-Typen
+| Typ | Beschreibung |
+|---|---|
+| Text | Editierbarer `<p>`-Block mit Text-Toolbar |
+| Bild | Standalone-Bild aus der Galerie, zentriert |
+| Trennlinie | `haarlinie.webp` als horizontaler Trenner |
+| Abstand | `spacer_break` – unsichtbar im Frontend, gestrichelt im Edit-Mode |
+
+### Text-Toolbar
+Floating-Toolbar erscheint bei Textauswahl:
+`Fett` · `Kursiv` · `Unterstrichen` · `Link einfügen` · `Bild einfügen` · `H1` · `H2` · `H3`
+
+### Galerie (Bildverwaltung)
+- Zeigt alle Bilder nach Ordner gefiltert: Alle / Uploads / bilder-kneipe / images
+- Upload per Drag & Drop oder Dateiauswahl
+- Automatische WebP-Konvertierung serverseitig (Sharp)
+- Deduplizierung: bereits vorhandene Dateien werden nicht doppelt gespeichert
+- Löschen mit Custom-Confirm-Dialog
+- Dateigrößenanzeige
+- Vollbild-Vorschau
+
+### Termin-Verwaltung (termine.html)
+- Termine direkt auf der Seite editierbar (Datum, Beschreibung)
+- `+ Termin` Button fügt neue Zeile hinzu
+- Löschen über Block-UI
+
+### Sicherungsverlauf
+- „Verlauf"-Button öffnet Modal mit allen Sicherungen der aktuellen Seite
+- Sicherungen werden automatisch vor jedem Speichervorgang erstellt (max. 10 pro Seite)
+- Wiederherstellen sichert den aktuellen Stand zuerst, dann wird die Sicherung eingespielt
+
+### Footer-Bearbeitung
+- `#footer` Elemente sind im Edit-Mode vollständig bearbeitbar
+- Jedes Footer-Element bekommt eine Block-UI
+
+### Custom-Dialoge
+Alle Browser-nativen `confirm()` und `alert()` wurden durch custom Dialoge im Site-Stil ersetzt (dunkel, goldene Ränder, keine browser-typischen Fenster).
 
 ---
 
-*Erstellt Februar 2026*
+## Was ist im Projektumfang enthalten
+
+### Beauftragt & umgesetzt
+- Komplettes Node.js/Express Backend
+- JWT-Authentifizierung mit bcrypt
+- Inline-Editing (Text, Überschriften, Listen)
+- Bild-Galerie mit Upload, WebP-Konvertierung, Löschen
+- CMS Block-System mit Drag & Drop
+- Spalten-System (Split, hinzufügen, entfernen, rebalance)
+- Termin-Verwaltung
+- Text-Toolbar (fett, kursiv, unterstrichen, Links, Bilder, Überschriften)
+- Admin-Bar mit Mobile-Support
+- Session-Management mit Timeout-Warnung
+- Passwort ändern
+- Brute-Force-Schutz
+- Sicherungsverlauf pro Seite (Backup + Restore)
+- Bild-Skalierung per Slider
+- Footer-Bearbeitung
+- Custom Confirm/Alert-Dialoge
+- Bild-Link setzen/bearbeiten/entfernen
+
+### Zusätzlich ohne Aufpreis umgesetzt
+- Sitemap.xml mit automatischem `lastmod`-Update beim Speichern
+- robots.txt
+- Custom 404-Seite
+- Security-Header (Helmet.js)
+- Automatisches Backup-Cleanup (max. 10 pro Seite)
+- Mobile Admin-Bar
+- Session-Timeout-Warnung
+- Deduplizierung beim Bild-Upload
+- PDF-Upload für Speisekarte
+
+---
+
+## Preiseinschätzung
+
+| Leistung | Stunden |
+|---|---|
+| Backend (Server, Auth, API, Security) | ~20 h |
+| CMS-Frontend (admin-edit.js, alle Features) | ~35 h |
+| Block-System inkl. Spalten & Drag & Drop | ~10 h |
+| Galerie + Upload | ~6 h |
+| Sicherungsverlauf + Restore | ~4 h |
+| Bugfixing | ~10 h |
+| **Gesamt** | **~85 h** |
+
+**Üblicher Stundensatz Webentwicklung (DE): 22–40 €/h**
+
+| Kalkulation | Betrag |
+|---|---|
+| 85 h × 20 €/h | 1.700 € |
+| -20% | 1.360 € |
+
+---
+
+*Letzte Aktualisierung: Februar 2026*
