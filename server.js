@@ -27,6 +27,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// ── Admin-JS nur für eingeloggte Nutzer ausliefern ──────────────────────────
+// admin-loader.js ist public (enthält Login-Logik), alle anderen admin-*.js
+// werden erst nach erfolgreicher Authentifizierung ausgeliefert.
+app.get(/^\/js\/admin-(?!loader).*\.js$/, requireAuth, (_req, _res, next) => next());
+
 // Statische Dateien aus /public ausliefern
 // ── WebP Middleware: liefert .webp wenn vorhanden, Browser unterstützt es ──
 app.use((req, res, next) => {
@@ -107,15 +112,30 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // ─── Multer – Bild Upload Konfiguration ──────────────────────────────────────
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, UPLOADS_DIR);
+    // Zielordner aus Form-Feld 'folder' – Fallback: uploads
+    const raw     = (req.body.folder || 'uploads').replace(/[^a-zA-Z0-9_-]/g, '');
+    const safeDir = raw || 'uploads';
+    const destDir = path.resolve(path.join(__dirname, 'public', safeDir));
+
+    // Path-Traversal-Schutz
+    if (!destDir.startsWith(path.resolve(path.join(__dirname, 'public')))) {
+      return cb(new Error('Ungültiger Zielordner'));
+    }
+    // Ordner anlegen falls nötig (z.B. neu erstellte Custom-Ordner)
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    cb(null, destDir);
   },
   filename: (req, file, cb) => {
+    const raw     = (req.body.folder || 'uploads').replace(/[^a-zA-Z0-9_-]/g, '');
+    const safeDir = raw || 'uploads';
+    const destDir = path.join(__dirname, 'public', safeDir);
+
     // Originalnamen behalten, aber Sonderzeichen entfernen
     const safeName = file.originalname
       .replace(/[^a-zA-Z0-9._-]/g, '_')
       .toLowerCase();
     // Wenn Datei schon existiert, Timestamp voranstellen
-    const finalName = fs.existsSync(path.join(UPLOADS_DIR, safeName))
+    const finalName = fs.existsSync(path.join(destDir, safeName))
       ? `${Date.now()}_${safeName}`
       : safeName;
     cb(null, finalName);
@@ -350,21 +370,25 @@ app.post('/api/upload-image', requireAuth, upload.single('image'), async (req, r
     return res.status(400).json({ error: 'Kein Bild empfangen' });
   }
 
+  // Zielordner aus Form-Feld (Multer hat schon dorthin geschrieben)
+  const targetFolder = (req.body.folder || 'uploads').replace(/[^a-zA-Z0-9_-]/g, '') || 'uploads';
+  const targetDir    = path.join(__dirname, 'public', targetFolder);
+
   const originalPath = req.file.path;
   const originalName = req.file.filename;
   const ext          = path.extname(originalName).toLowerCase();
 
   // Nur konvertieren wenn kein WebP (GIFs auch überspringen – Animation)
   if (ext === '.webp' || ext === '.gif') {
-    const imageUrl = `/uploads/${originalName}`;
+    const imageUrl = `/${targetFolder}/${originalName}`;
     return res.json({ success: true, url: imageUrl, filename: originalName,
-      originalName: req.file.originalname, size: req.file.size });
+      folder: targetFolder, originalName: req.file.originalname, size: req.file.size });
   }
 
   try {
     // WebP-Dateiname: gleicher Name, andere Endung
     const webpName = originalName.replace(/\.[^.]+$/, '.webp');
-    const webpPath = path.join(UPLOADS_DIR, webpName);
+    const webpPath = path.join(targetDir, webpName);
 
     await sharp(originalPath)
       .webp({ quality: 82 })
@@ -373,64 +397,79 @@ app.post('/api/upload-image', requireAuth, upload.single('image'), async (req, r
     // Original löschen – WebP ist das neue Original
     fs.unlinkSync(originalPath);
 
-    const size = fs.statSync(webpPath).size;
-    const imageUrl = `/uploads/${webpName}`;
+    const size     = fs.statSync(webpPath).size;
+    const imageUrl = `/${targetFolder}/${webpName}`;
 
     res.json({ success: true, url: imageUrl, filename: webpName,
-      originalName: req.file.originalname, size });
+      folder: targetFolder, originalName: req.file.originalname, size });
 
   } catch (err) {
     // Konvertierung fehlgeschlagen → Original behalten
     console.error('WebP-Konvertierung fehlgeschlagen:', err.message);
-    const imageUrl = `/uploads/${originalName}`;
+    const imageUrl = `/${targetFolder}/${originalName}`;
     res.json({ success: true, url: imageUrl, filename: originalName,
-      originalName: req.file.originalname, size: req.file.size });
+      folder: targetFolder, originalName: req.file.originalname, size: req.file.size });
   }
 });
 
-// GET /api/images – Alle verfügbaren Bilder auflisten
+// GET /api/images – Alle verfügbaren Bilder auflisten (nur .webp, dynamische Ordner)
 app.get('/api/images', requireAuth, (req, res) => {
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  const publicDir = path.join(__dirname, 'public');
   const allImages = [];
+  const folders   = [];
 
-  // Bilder aus /public/uploads
+  // Verzeichnisse die keine Bild-Ordner sind
+  const EXCLUDE = new Set(['css', 'js', 'fonts', 'vendor', 'node_modules',
+                            'images', 'bilder-kneipe']); // werden separat unten gehandelt
+
+  // 1. uploads – immer einschließen (auch wenn leer, ist Upload-Ziel)
   if (fs.existsSync(UPLOADS_DIR)) {
-    const uploadFiles = fs.readdirSync(UPLOADS_DIR)
-      .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({ url: `/uploads/${f}`, folder: 'uploads', name: f }));
-    allImages.push(...uploadFiles);
+    folders.push('uploads');
+    fs.readdirSync(UPLOADS_DIR)
+      .filter(f => path.extname(f).toLowerCase() === '.webp')
+      .forEach(f => allImages.push({ url: `/uploads/${f}`, folder: 'uploads', name: f }));
   }
 
-  // Bilder aus /public/images
-  const imagesDir = path.join(__dirname, 'public', 'images');
+  // 2. /public/images – statische Seiten-Bilder
+  const imagesDir = path.join(publicDir, 'images');
   if (fs.existsSync(imagesDir)) {
-    const imageFiles = fs.readdirSync(imagesDir)
-      .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({ url: `/images/${f}`, folder: 'images', name: f }));
-    allImages.push(...imageFiles);
-  }
-
-  // Bilder aus /public/bilder-kneipe
-  const bilderDir = path.join(__dirname, 'public', 'bilder-kneipe');
-  if (fs.existsSync(bilderDir)) {
-    const bilderFiles = fs.readdirSync(bilderDir)
-      .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-      .map(f => ({ url: `/bilder-kneipe/${f}`, folder: 'bilder-kneipe', name: f }));
-    allImages.push(...bilderFiles);
-  }
-
-  // Galerie-Ordner
-  ['galerie_25_1', 'galerie_25_2', 'galerie_30_1'].forEach(folder => {
-    const dir = path.join(__dirname, 'public', folder);
-    if (fs.existsSync(dir)) {
-      const files = fs.readdirSync(dir)
-        .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
-        .map(f => ({ url: `/${folder}/${f}`, folder, name: f }));
-      allImages.push(...files);
+    const webps = fs.readdirSync(imagesDir)
+      .filter(f => path.extname(f).toLowerCase() === '.webp');
+    if (webps.length) {
+      folders.push('images');
+      webps.forEach(f => allImages.push({ url: `/images/${f}`, folder: 'images', name: f }));
     }
-  });
+  }
 
-  res.json({ images: allImages });
+  // 3. /public/bilder-kneipe
+  const bilderDir = path.join(publicDir, 'bilder-kneipe');
+  if (fs.existsSync(bilderDir)) {
+    const webps = fs.readdirSync(bilderDir)
+      .filter(f => path.extname(f).toLowerCase() === '.webp');
+    if (webps.length) {
+      folders.push('bilder-kneipe');
+      webps.forEach(f => allImages.push({ url: `/bilder-kneipe/${f}`, folder: 'bilder-kneipe', name: f }));
+    }
+  }
+
+  // 4. Alle anderen Unterverzeichnisse dynamisch scannen (z.B. galerie_*, custom-Ordner)
+  try {
+    fs.readdirSync(publicDir, { withFileTypes: true })
+      .filter(d => d.isDirectory() && !EXCLUDE.has(d.name) && d.name !== 'uploads')
+      .forEach(d => {
+        const dir  = path.join(publicDir, d.name);
+        const webps = fs.readdirSync(dir)
+          .filter(f => path.extname(f).toLowerCase() === '.webp');
+        if (webps.length) {
+          folders.push(d.name);
+          webps.forEach(f => allImages.push({ url: `/${d.name}/${f}`, folder: d.name, name: f }));
+        }
+      });
+  } catch (err) {
+    console.error('Ordner-Scan fehlgeschlagen:', err.message);
+  }
+
+  res.json({ images: allImages, folders });
 });
 
 // PATCH /api/images/uploads/:filename – Bild umbenennen (nur uploads)
@@ -460,22 +499,96 @@ app.patch('/api/images/uploads/:filename', requireAuth, (req, res) => {
   res.json({ success: true, newName: safeNameWithExt, url: `/uploads/${safeNameWithExt}` });
 });
 
-// DELETE /api/images/:folder/:filename – Bild löschen (nur aus uploads)
-app.delete('/api/images/uploads/:filename', requireAuth, (req, res) => {
-  const { filename } = req.params;
-  const filePath = path.resolve(path.join(UPLOADS_DIR, filename));
+// DELETE /api/images/:folder/:filename – Bild löschen (beliebiger Ordner, löscht auch Original)
+app.delete('/api/images/:folder/:filename', requireAuth, (req, res) => {
+  const { folder, filename } = req.params;
 
-  // Sicherheitscheck
-  if (!filePath.startsWith(path.resolve(UPLOADS_DIR))) {
+  // Sicherheitscheck: keine Pfadkomponenten
+  if ([folder, filename].some(v => v.includes('/') || v.includes('\\') || v.includes('..'))) {
     return res.status(403).json({ error: 'Zugriff verweigert' });
   }
 
+  const publicDir = path.resolve(path.join(__dirname, 'public'));
+  const targetDir = path.resolve(path.join(__dirname, 'public', folder));
+  if (!targetDir.startsWith(publicDir)) {
+    return res.status(403).json({ error: 'Zugriff verweigert' });
+  }
+
+  const filePath = path.join(targetDir, filename);
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ error: 'Datei nicht gefunden' });
   }
 
   fs.unlinkSync(filePath);
+
+  // Auch Original (jpg/jpeg/png/gif) löschen, falls vorhanden
+  const baseName = filename.replace(/\.webp$/i, '');
+  for (const ext of ['.jpg', '.jpeg', '.png', '.gif']) {
+    const origPath = path.join(targetDir, baseName + ext);
+    if (fs.existsSync(origPath)) {
+      try { fs.unlinkSync(origPath); } catch {}
+    }
+  }
+
   res.json({ success: true });
+});
+
+// POST /api/folders – Neuen Bild-Ordner anlegen
+app.post('/api/folders', requireAuth, (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: 'Kein Name angegeben' });
+
+  const safeName = name.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  if (!safeName) return res.status(400).json({ error: 'Ungültiger Ordnername' });
+
+  const publicDir = path.resolve(path.join(__dirname, 'public'));
+  const targetDir = path.resolve(path.join(__dirname, 'public', safeName));
+  if (!targetDir.startsWith(publicDir)) {
+    return res.status(403).json({ error: 'Zugriff verweigert' });
+  }
+  if (fs.existsSync(targetDir)) {
+    return res.status(409).json({ error: 'Ordner existiert bereits' });
+  }
+
+  try {
+    fs.mkdirSync(targetDir);
+    res.json({ success: true, name: safeName });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/images/move – Bild in anderen Ordner verschieben
+app.post('/api/images/move', requireAuth, (req, res) => {
+  const { folder, filename, targetFolder } = req.body;
+  if (!folder || !filename || !targetFolder)
+    return res.status(400).json({ error: 'Parameter fehlen' });
+
+  if ([folder, filename, targetFolder].some(v => v.includes('/') || v.includes('\\') || v.includes('..')))
+    return res.status(403).json({ error: 'Zugriff verweigert' });
+
+  const publicDir = path.resolve(path.join(__dirname, 'public'));
+  const srcDir    = path.resolve(path.join(__dirname, 'public', folder));
+  const dstDir    = path.resolve(path.join(__dirname, 'public', targetFolder));
+
+  if (!srcDir.startsWith(publicDir) || !dstDir.startsWith(publicDir))
+    return res.status(403).json({ error: 'Zugriff verweigert' });
+
+  if (!fs.existsSync(dstDir))
+    return res.status(404).json({ error: 'Zielordner existiert nicht' });
+
+  const srcPath = path.join(srcDir, filename);
+  const dstPath = path.join(dstDir, filename);
+
+  if (!fs.existsSync(srcPath)) return res.status(404).json({ error: 'Datei nicht gefunden' });
+  if (fs.existsSync(dstPath))  return res.status(409).json({ error: 'Datei existiert bereits im Zielordner' });
+
+  try {
+    fs.renameSync(srcPath, dstPath);
+    res.json({ success: true, newUrl: `/${targetFolder}/${filename}` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // ─── Fehlerbehandlung ─────────────────────────────────────────────────────────

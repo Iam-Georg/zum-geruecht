@@ -137,6 +137,41 @@
         node.addEventListener("keyup",   window.showToolbarForSelection);
       });
     });
+
+    // ── Paste-Cleanup (einmalig registrieren) ─────────────────────────────────
+    if (!document._adminPasteCleanup) {
+      document._adminPasteCleanup = true;
+      document.addEventListener("paste", (e) => {
+        const target = e.target.closest('[contenteditable="true"]');
+        if (!target) return;            // nur in editierbaren Feldern
+        e.preventDefault();
+
+        // Reinen Text aus Clipboard holen
+        const plain = (e.clipboardData || window.clipboardData).getData("text/plain");
+        if (!plain) return;
+
+        // Zeilenumbrüche: doppelte Leerzeilen → <br><br>, einfache → Leerzeichen
+        // (Verhält sich wie normales Browser-Verhalten ohne Fremd-CSS)
+        const lines  = plain.split(/\r?\n/);
+        const frag   = document.createDocumentFragment();
+        lines.forEach((line, i) => {
+          if (line.length) frag.appendChild(document.createTextNode(line));
+          if (i < lines.length - 1) frag.appendChild(document.createElement("br"));
+        });
+
+        const sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(frag);
+        // Cursor ans Ende der Einfügung setzen
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        window.markUnsaved();
+      });
+    }
   };
 
   window.removeEditable = function () {
@@ -205,16 +240,16 @@
     const existingUrl = parentA ? parentA.getAttribute("href") : "";
 
     const lOl = document.createElement("div");
-    lOl.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;";
+    lOl.style.cssText = "position:fixed;inset:0;backdrop-filter:blur(8px) brightness(0.55);-webkit-backdrop-filter:blur(8px) brightness(0.55);background:rgba(10,5,0,0.45);z-index:99999;display:flex;align-items:center;justify-content:center;";
     lOl.innerHTML = `
-      <div style="background:#1e1208;border:1px solid #604e14;border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-family:Arial,sans-serif;">
+      <div style="background:rgba(18,10,3,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(96,78,20,0.7);border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 8px 48px rgba(0,0,0,0.6);font-family:Arial,sans-serif;">
         <h3 style="color:#c4b47a;font-size:14px;margin-bottom:18px;letter-spacing:1px;text-align:center;">~ Bild-Link ${existingUrl ? "bearbeiten" : "hinzufügen"} ~</h3>
         <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">URL</label>
-        <input id="img-link-url" type="url" value="${window.escHtml(existingUrl || "https://")}" style="width:100%;background:#0e0906;border:1px solid #604e14;border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;">
-        ${existingUrl ? '<button id="img-link-remove" style="margin-top:10px;padding:6px 12px;background:transparent;border:1px solid #7a1a1a;color:#c97070;border-radius:4px;cursor:pointer;font-size:12px;">Link entfernen</button>' : ""}
+        <input id="img-link-url" type="url" value="${window.escHtml(existingUrl || "https://")}" style="width:100%;background:rgba(0,0,0,0.35);border:1px solid rgba(96,78,20,0.6);border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;transition:border-color 0.15s;">
+        ${existingUrl ? '<button id="img-link-remove" style="margin-top:10px;padding:6px 12px;background:transparent;border:1px solid rgba(180,60,60,0.5);color:#c97070;border-radius:4px;cursor:pointer;font-size:12px;transition:all 0.15s;">Link entfernen</button>' : ""}
         <div style="display:flex;gap:10px;margin-top:20px;">
-          <button id="img-link-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:transparent;color:#a19d91;letter-spacing:1px;">Abbrechen</button>
-          <button id="img-link-save"   style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:#604e14;color:#e8dfc8;letter-spacing:1px;">Speichern</button>
+          <button id="img-link-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(96,78,20,0.5);background:transparent;color:#a19d91;letter-spacing:1px;transition:all 0.15s;">Abbrechen</button>
+          <button id="img-link-save"   style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(179,140,15,0.6);background:transparent;color:#b38c0f;letter-spacing:1px;transition:all 0.15s;">Speichern</button>
         </div>
       </div>`;
     document.body.appendChild(lOl);

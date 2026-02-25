@@ -4,7 +4,6 @@
 
 Ca. 2 Wochen, täglich ~4 Stunden Entwicklungsarbeit
 
----
 
 ## Technologie-Stack
 
@@ -18,7 +17,6 @@ Ca. 2 Wochen, täglich ~4 Stunden Entwicklungsarbeit
 | Drag & Drop | SortableJS (CDN)                        |
 | Hosting     | Hetzner (empfohlen)                     |
 
----
 
 ## Dateistruktur
 
@@ -42,8 +40,8 @@ Ca. 2 Wochen, täglich ~4 Stunden Entwicklungsarbeit
 │   │   ├── zum-geruecht.css
 │   │   ├── bootstrap.css
 │   │   └── admin-edit.css  – Alle Admin-/CMS-Styles (ausgelagert aus JS)
-│   ├── images/             – Statische Bilder
-│   └── images/uploads/     – Hochgeladene Bilder (WebP)
+│   ├── images/             – Statische Bilder (WebP)
+│   └── uploads/            – Hochgeladene Bilder (WebP)
 ├── backups/                – Automatische HTML-Sicherungen (max. 10/Seite)
 └── .env                    – ADMIN_PASSWORD_HASH, JWT_SECRET, PORT
 ```
@@ -60,49 +58,49 @@ Ca. 2 Wochen, täglich ~4 Stunden Entwicklungsarbeit
 
 ### Modulübersicht
 
-| Datei             | Zeilen | Verantwortung                                                                   |
-| ----------------- | ------ | ------------------------------------------------------------------------------- |
-| `admin-edit.css`  | ~530   | Alle Styles – cachebar, kein JS-Aufblähung, kein FOUC                           |
-| `admin-state.js`  | ~90    | `AdminConfig`, `AdminState`, `lockScroll`, `escHtml`                            |
-| `admin-ui.js`     | ~1.100 | Admin-Bar, Login-Modal, Galerie, Text-Toolbar, Notify, Backup-Modal, Bild-Skala |
-| `admin-blocks.js` | ~680   | Block-System, Spalten, Undo, Save, Termin-System, Edit-Mode                     |
-| `admin-edit.js`   | ~75    | Init, Auth-Check, ESC-Handler, Session-Timeout                                  |
+| Datei             | Zeilen  | Verantwortung                                                                   |
+| ----------------- | ------- | ------------------------------------------------------------------------------- |
+| `admin-edit.css`  | ~600    | Alle Styles – cachebar, kein JS-Aufblähung, kein FOUC                           |
+| `admin-state.js`  | ~90     | `AdminConfig`, `AdminState`, `lockScroll`, `escHtml`                            |
+| `admin-ui.js`     | ~1.300  | Admin-Bar, Login, Galerie, Text-Toolbar, Notify, Backup-Modal, Bild-Skala       |
+| `admin-blocks.js` | ~680    | Block-System, Spalten, Undo, Save, Termin-System, Edit-Mode                     |
+| `admin-edit.js`   | ~75     | Init, Auth-Check, ESC-Handler, Session-Timeout                                  |
 
----
 
 ## Backend – API-Routen
 
-| Methode | Route                       | Auth | Beschreibung                                  |
-| ------- | --------------------------- | ---- | --------------------------------------------- |
-| POST    | `/api/login`                | –    | Login mit bcrypt-Hash, setzt HTTP-only Cookie |
-| POST    | `/api/logout`               | ✓    | Löscht Session-Cookie                         |
-| GET     | `/api/check-auth`           | ✓    | Prüft ob Session gültig                       |
-| POST    | `/api/save-html`            | ✓    | Seite speichern + Backup erstellen            |
-| GET     | `/api/images`               | ✓    | Alle Bilder auflisten (mit Metadaten)         |
-| POST    | `/api/upload-image`         | ✓    | Bild hochladen + WebP-Konvertierung           |
-| PATCH   | `/api/images/uploads/:name` | ✓    | Bild umbenennen                               |
-| DELETE  | `/api/images/uploads/:name` | ✓    | Bild löschen                                  |
-| POST    | `/api/upload-pdf`           | ✓    | PDF für Speisekarte hochladen                 |
-| GET     | `/api/backups/:filename`    | ✓    | Sicherungen einer Seite auflisten             |
-| POST    | `/api/restore-backup`       | ✓    | Sicherung wiederherstellen                    |
-| POST    | `/api/change-password`      | ✓    | Passwort ändern                               |
+| Methode | Route                            | Auth | Beschreibung                                      |
+| ------- | -------------------------------- | ---- | ------------------------------------------------- |
+| POST    | `/api/login`                     | –    | Login mit bcrypt-Hash, setzt HTTP-only Cookie     |
+| POST    | `/api/logout`                    | ✓    | Löscht Session-Cookie                             |
+| GET     | `/api/check-auth`                | ✓    | Prüft ob Session gültig                           |
+| POST    | `/api/save-html`                 | ✓    | Seite speichern + Backup erstellen                |
+| GET     | `/api/images`                    | ✓    | Alle .webp-Bilder auflisten + Ordnerliste         |
+| POST    | `/api/upload-image`              | ✓    | Bild hochladen + WebP-Konvertierung               |
+| PATCH   | `/api/images/uploads/:name`      | ✓    | Bild umbenennen (nur uploads)                     |
+| DELETE  | `/api/images/:folder/:filename`  | ✓    | Bild löschen (.webp + Original) aus beliebigem Ordner |
+| POST    | `/api/folders`                   | ✓    | Neuen Bild-Ordner anlegen                         |
+| POST    | `/api/images/move`               | ✓    | Bild zwischen Ordnern verschieben                 |
+| POST    | `/api/upload-pdf`                | ✓    | PDF für Speisekarte hochladen                     |
+| GET     | `/api/backups/:filename`         | ✓    | Sicherungen einer Seite auflisten                 |
+| POST    | `/api/restore-backup`            | ✓    | Sicherung wiederherstellen                        |
+| POST    | `/api/change-password`           | ✓    | Passwort ändern                                   |
 
-**Sicherheit:** Brute-Force-Schutz (5 Versuche, 15 Min. Sperre), Helmet.js Security-Headers, Path-Traversal-Schutz auf allen Dateioperationen, Trust-Proxy-Konfiguration für Hetzner.
-
----
+**Sicherheit:** Brute-Force-Schutz (3 Versuche, 15 Min. Sperre), Helmet.js Security-Headers, Path-Traversal-Schutz auf allen Dateioperationen, Trust-Proxy-Konfiguration für Hetzner.
 
 ## CMS-Frontend
 
 ### Login & Session
 
-- Versteckter Footer-Link (`~ Admin ~`) öffnet Login-Modal
+- Fester Login/Logout-Button (Person-Icon) rechts am Bildschirmrand, direkt über dem `schalter_oben` – immer sichtbar
+- Eingeloggt: Icon wechselt zu Pfeil-raus, Klick loggt direkt aus
 - Session läuft nach 8 Stunden ab (Warnung nach 7h50min)
 - Passwort ändern direkt aus der Admin-Bar
 
 ### Admin-Bar
 
 Erscheint nach Login am unteren Bildschirmrand. Enthält:
-`Bearbeiten` · `Rückgängig` · `Verwerfen` · `Speichern` · `Abmelden` · `PDF ändern` (nur Speisekarte) · `+ Text` · `+ Bild` · `+ Trennlinie` · `+ Abstand` · `Passwort ändern` · `Verlauf`
+`Bearbeiten` · `Rückgängig` · `Verwerfen` · `Speichern` · `PDF ändern` (nur Speisekarte) · `+ Text` · `+ Bild` · `+ Trennlinie` · `+ Abstand` · `Passwort ändern` · `Verlauf`
 
 ### CMS Block-System
 
@@ -118,7 +116,7 @@ Jeder Inhaltsbereich ist ein **CMS-Block**. Beim Bearbeiten erscheint pro Block 
 
 #### Spalten-System
 
-- Erste Klick auf „Spalten": teilt Block in 2 gleichgroße Spalten
+- Erster Klick auf „Spalten": teilt Block in 2 gleichgroße Spalten
 - Jeder weitere Klick auf „+ Spalte": fügt eine neue Spalte hinzu
 - Bootstrap-Grid wird automatisch gleichmäßig verteilt: 2→col-6, 3→col-4, 4→col-3
 - Jede Spalte hat eigene Controls: `+ Text`, `+ Bild`, `Spalte entfernen`
@@ -140,12 +138,16 @@ Floating-Leiste (links, vertikal) erscheint im Edit-Mode:
 
 ### Galerie (Bildverwaltung)
 
-- Zeigt alle Bilder nach Ordner gefiltert: Alle / Uploads / images / bilder-kneipe / galerie-Ordner
-- Upload per Drag & Drop oder Dateiauswahl (bis 15 MB)
-- Automatische WebP-Konvertierung serverseitig (Sharp)
+- Zeigt ausschließlich `.webp`-Dateien (einheitliches Format, kein Wildwuchs)
+- Ordner-Tabs dynamisch aus Verzeichnisstruktur generiert – kein Hardcoding
+- Ordner-Verwaltung per Toggle: Bilder per Drag & Drop auf Ordner-Tabs verschieben
+- Eigene Ordner direkt aus der Galerie heraus anlegen
+- Upload per Drag & Drop oder Dateiauswahl (bis 15 MB), automatische WebP-Konvertierung, direkt in den gewählten Ziel-Ordner
 - Deduplizierung: bereits vorhandene Dateien werden nicht doppelt gespeichert
-- Upload-Bilder: Umbenennen direkt im Grid, Löschen mit Bestätigung
-- Volltext-Suche und Ordner-Filter
+- Bilder aus uploads: Umbenennen direkt im Grid
+- Löschen aus beliebigem Ordner – entfernt `.webp` und das Original (jpg/png/…) automatisch
+- Volltext-Suche links in der Filter-Leiste, Ordner-Tabs daneben
+- Im Ordner-Verwaltungs-Modus ist Bild-Auswahl deaktiviert (kein versehentlicher Tausch)
 
 ### Termin-Verwaltung (termine.html)
 
@@ -159,7 +161,14 @@ Floating-Leiste (links, vertikal) erscheint im Edit-Mode:
 - Sicherungen werden automatisch vor jedem Speichervorgang erstellt (max. 10 pro Seite)
 - Wiederherstellen sichert den aktuellen Stand zuerst, dann wird die Sicherung eingespielt
 
----
+### Footer-Bearbeitung
+
+- `#footer`-Elemente sind im Edit-Mode vollständig bearbeitbar
+- Jedes Footer-Element bekommt eine Block-UI
+
+### Custom-Dialoge
+
+Alle Browser-nativen `confirm()` und `alert()` wurden durch custom Dialoge im Site-Stil ersetzt (Blur-Backdrop, transparenter Hintergrund, goldene Ränder).
 
 ## Was ist im Projektumfang enthalten
 
@@ -168,12 +177,13 @@ Floating-Leiste (links, vertikal) erscheint im Edit-Mode:
 - Komplettes Node.js/Express Backend
 - JWT-Authentifizierung mit bcrypt
 - Inline-Editing (Text, Überschriften, Listen)
-- Bild-Galerie mit Upload, WebP-Konvertierung, Umbenennen, Löschen
+- Bild-Galerie mit Upload, WebP-Konvertierung, Ordner-Verwaltung, Umbenennen, Löschen
 - CMS Block-System mit Drag & Drop
 - Spalten-System (Split, hinzufügen, entfernen, rebalance)
 - Termin-Verwaltung
 - Text-Toolbar (fett, kursiv, unterstrichen, Links, Bilder, Schriftgröße, Farbe)
 - Admin-Bar mit Mobile-Support
+- Login/Logout-Button dauerhaft sichtbar (passt sich an `schalter_oben` an)
 - Session-Management mit Timeout-Warnung
 - Passwort ändern
 - Brute-Force-Schutz
@@ -194,9 +204,17 @@ Floating-Leiste (links, vertikal) erscheint im Edit-Mode:
 - Session-Timeout-Warnung
 - Deduplizierung beim Bild-Upload
 - PDF-Upload für Speisekarte
-- **Code-Refactoring:** Aufteilung in Module, XSS-Fixes, Undo-Bug behoben
+- Dynamische Ordner-Erkennung in der Galerie (kein Hardcoding)
+- Paste-Cleanup: Formatierungs-Müll aus Word/Google Docs wird beim Einfügen automatisch entfernt
+- Upload direkt in Ziel-Ordner (kein nachträgliches Verschieben nötig)
 
----
+## Mögliche Erweiterungen (nicht im Projektumfang)
+
+| Feature                          | Aufwand | Einordnung         |
+| -------------------------------- | ------- | ------------------ |
+| Alt-Text für Bilder editierbar   | ~2 h    | SEO / Barrierefreiheit |
+| Auto-Save Entwurf (localStorage) | ~3 h    | Komfort            |
+| Schrittweises Undo               | ~8 h    | Komfort            |
 
 ## Preiseinschätzung
 
@@ -205,17 +223,17 @@ Floating-Leiste (links, vertikal) erscheint im Edit-Mode:
 | Backend (Server, Auth, API, Security)    | ~20 h     |
 | CMS-Frontend (alle Features)             | ~35 h     |
 | Block-System inkl. Spalten & Drag & Drop | ~10 h     |
-| Galerie + Upload                         | ~6 h      |
+| Galerie + Upload + Ordner-Verwaltung     | ~10 h      |
 | Sicherungsverlauf + Restore              | ~4 h      |
-| Bugfixing & Refactoring                  | ~15 h     |
-| **Gesamt**                               | **~90 h** |
+| Bugfixing & Feinschliff                  | ~13 h     |
+| **Gesamt**                               | **~92 h** |
 
 **Üblicher Stundensatz Webentwicklung (DE): 22–40 €/h**
 
 | Kalkulation   | Betrag  |
 | ------------- | ------- |
-| 90 h × 20 €/h | 1.800 € |
-| -20%          | 1.440 € |
+| 92 h × 20 €/h | 1.840 € |
+| -20%          | 1.472 € |
 
 ---
 

@@ -19,30 +19,53 @@
   // ─── Hilfsfunktion: escHtml ───────────────────────────────────────────────────
   const esc = window.escHtml;
 
-  // ─── Admin Footer Link ────────────────────────────────────────────────────────
+  // ─── Admin Auth Button (Login/Logout – über schalter_top) ────────────────────
+  // SVG Bootstrap Icons
+  const SVG_LOGIN  = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>`;
+  const SVG_LOGOUT = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/><path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg>`;
+
   window.injectAdminFooterLink = function () {
-    const wrap = document.createElement("div");
-    wrap.id = "admin-footer-link";
-    const a = document.createElement("a");
-    a.href = "#";
-    a.id   = "admin-footer-trigger";
-    a.textContent = "~ Admin ~";
-    wrap.appendChild(a);
-    document.body.appendChild(wrap);
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
+    // Button wurde bereits vom admin-loader.js erstellt → nichts zu tun
+    // Falls Loader nicht verwendet wird (Direktaufruf ohne Loader), Button erstellen
+    if (document.getElementById("admin-auth-btn")) return;
+    const btn     = document.createElement("button");
+    btn.id        = "admin-auth-btn";
+    btn.title     = "Admin Login";
+    btn.innerHTML = SVG_LOGIN;
+    document.body.appendChild(btn);
+    btn.addEventListener("click", _authBtnClick);
+  };
+
+  function _authBtnClick() {
+    if (STATE.isAuthenticated) {
+      window.logout();
+    } else {
       showLoginModal();
-    });
-  };
+    }
+  }
 
+  // Nach Login → Logout-Icon zeigen
   window.showAdminFooterLink = function () {
-    const el = document.getElementById("admin-footer-link");
-    if (el) el.style.display = "block";
+    const btn = document.getElementById("admin-auth-btn");
+    if (!btn) return;
+    btn.innerHTML = SVG_LOGIN;
+    btn.title     = "Admin Login";
+    window.__loaderSetLoginIcon?.();
   };
 
+  // Nach Logout → Login-Icon zeigen
   window.hideAdminFooterLink = function () {
-    const el = document.getElementById("admin-footer-link");
-    if (el) el.style.display = "none";
+    const btn = document.getElementById("admin-auth-btn");
+    if (!btn) return;
+    btn.innerHTML = SVG_LOGOUT;
+    btn.title     = "Abmelden";
+    window.__loaderSetLogoutIcon?.();
+    // Click-Handler übernehmen (Loader-Handler ersetzen)
+    const newBtn = btn.cloneNode(true);
+    newBtn.innerHTML = SVG_LOGOUT;
+    newBtn.title     = "Abmelden";
+    btn.parentNode.replaceChild(newBtn, btn);
+    newBtn.addEventListener("click", _authBtnClick);
   };
 
   // ─── Admin Bar ────────────────────────────────────────────────────────────────
@@ -74,7 +97,6 @@
         <div class="abar-sep"></div>
         <button class="abar-btn" id="btn-save" disabled>~ Speichern <span id="unsaved-dot"></span></button>
         <div class="abar-sep"></div>
-        <button class="abar-btn" id="btn-logout">~ Abmelden</button>
         ${pdfBtn}
         <div class="abar-sep"></div>
         <button class="abar-btn" id="btn-add-block-text" title="Textfeld hinzufügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Text</button>
@@ -97,7 +119,6 @@
           <button class="abar-mobile-btn" id="mob-btn-undo" disabled>~ Rückgängig</button>
           <button class="abar-mobile-btn" id="mob-btn-discard" disabled>~ Verwerfen</button>
           <button class="abar-mobile-btn" id="mob-btn-save" disabled>~ Speichern</button>
-          <button class="abar-mobile-btn" id="mob-btn-logout">~ Abmelden</button>
         </div>
       </div>`;
 
@@ -109,7 +130,6 @@
     document.getElementById("btn-undo").addEventListener("click", window.undoLastChange);
     document.getElementById("btn-discard").addEventListener("click", window.discardChanges);
     document.getElementById("btn-save").addEventListener("click", window.saveChanges);
-    document.getElementById("btn-logout").addEventListener("click", window.logout);
     document.getElementById("btn-backups")?.addEventListener("click", openBackupModal);
     document.getElementById("btn-changepw").addEventListener("click", openChangePwModal);
 
@@ -133,7 +153,6 @@
     document.getElementById("mob-btn-undo").addEventListener("click", () => { window.undoLastChange(); closeMob(); });
     document.getElementById("mob-btn-discard").addEventListener("click", window.discardChanges);
     document.getElementById("mob-btn-save").addEventListener("click", () => { window.saveChanges(); closeMob(); });
-    document.getElementById("mob-btn-logout").addEventListener("click", window.logout);
   };
 
   window.hideAdminBar = function () {
@@ -177,6 +196,9 @@
 
   // ─── Login Modal ──────────────────────────────────────────────────────────────
   window.injectLoginModal = function () {
+    // Loader hat das Modal evtl. bereits erstellt (und danach wieder entfernt
+    // nach erfolgreichem Login). Nur erstellen wenn nicht vorhanden.
+    if (document.getElementById("admin-login-modal")) return;
     const modal = document.createElement("div");
     modal.id = "admin-login-modal";
     // Kein innerHTML mit user-Daten – alles statisch
@@ -255,7 +277,7 @@
     STATE.isAuthenticated   = false;
     STATE.hasUnsavedChanges = false;
     window.hideAdminBar();
-    window.showAdminFooterLink();
+    window.showAdminFooterLink(); // Icon → Login
     window.showNotify("~ Abgemeldet ~", "info");
   };
 
@@ -507,11 +529,11 @@
 
     const linkOverlay = document.createElement("div");
     linkOverlay.id    = "link-modal-overlay";
-    linkOverlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;";
+    linkOverlay.style.cssText = "position:fixed;inset:0;backdrop-filter:blur(8px) brightness(0.55);-webkit-backdrop-filter:blur(8px) brightness(0.55);background:rgba(10,5,0,0.45);z-index:99999;display:flex;align-items:center;justify-content:center;";
 
     // HTML komplett über DOM aufbauen – kein user-Daten in innerHTML
     const box = document.createElement("div");
-    box.style.cssText = "background:#1e1208;border:1px solid #604e14;border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-family:Arial,sans-serif;";
+    box.style.cssText = "background:rgba(18,10,3,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(96,78,20,0.7);border-radius:10px;padding:26px 30px;width:340px;max-width:92vw;box-shadow:0 8px 48px rgba(0,0,0,0.6);font-family:Arial,sans-serif;";
     box.innerHTML = `
       <h3 style="color:#c4b47a;font-size:14px;margin-bottom:18px;letter-spacing:1px;text-align:center;">~ Link einfügen ~</h3>
       <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">URL</label>
@@ -522,8 +544,8 @@
       ` : ""}
       <div id="link-modal-error" style="color:#c97070;font-size:12px;margin-top:8px;min-height:16px;"></div>
       <div style="display:flex;gap:10px;margin-top:20px;">
-        <button id="link-modal-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:transparent;color:#a19d91;letter-spacing:1px;">Abbrechen</button>
-        <button id="link-modal-save"   style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid #604e14;background:#604e14;color:#e8dfc8;letter-spacing:1px;">Einfügen</button>
+        <button id="link-modal-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(96,78,20,0.5);background:transparent;color:#a19d91;letter-spacing:1px;transition:all 0.15s;">Abbrechen</button>
+        <button id="link-modal-save"   style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(179,140,15,0.6);background:transparent;color:#b38c0f;letter-spacing:1px;transition:all 0.15s;">Einfügen</button>
       </div>`;
     linkOverlay.appendChild(box);
     document.body.appendChild(linkOverlay);
@@ -573,28 +595,32 @@
   }
 
   // ─── Galerie ──────────────────────────────────────────────────────────────────
+  // Galerie-interner State
+  const galState = { editMode: false, dragItem: null, folders: [] };
+
   window.injectGalleryOverlay = function () {
     const overlay = document.createElement("div");
     overlay.id    = "admin-gallery-overlay";
     overlay.innerHTML = `
       <div class="gal-panel">
         <div class="gal-header">
-          <h3>~ Bild auswählen ~</h3>
-          <button class="gal-close" id="gal-close">✕</button>
+          <h3 id="gal-title">~ Bild auswählen ~</h3>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="gal-edit-toggle" id="gal-edit-toggle" title="Ordner-Verwaltung ein-/ausschalten">✎ Ordner verwalten</button>
+            <button class="gal-close" id="gal-close">✕</button>
+          </div>
         </div>
         <div class="gal-upload-zone" id="gal-upload-zone">
-          Neues Bild hier ablegen oder klicken zum Auswählen &nbsp;·&nbsp; JPG, PNG, GIF, WEBP &nbsp;·&nbsp; max. 15 MB
+          Neues Bild hier ablegen oder klicken · JPG, PNG, GIF, WEBP · max. 15 MB
           <input type="file" id="gal-file-input" accept="image/*" multiple style="display:none">
         </div>
-        <div class="gal-filter-bar">
-          <button class="gal-filter-btn active" data-folder="all">~ Alle</button>
-          <button class="gal-filter-btn" data-folder="uploads">~ Uploads</button>
-          <button class="gal-filter-btn" data-folder="images">~ images</button>
-          <button class="gal-filter-btn" data-folder="bilder-kneipe">~ bilder-kneipe</button>
-          <button class="gal-filter-btn" data-folder="galerie_25_1">~ galerie_25_1</button>
-          <button class="gal-filter-btn" data-folder="galerie_25_2">~ galerie_25_2</button>
-          <button class="gal-filter-btn" data-folder="galerie_30_1">~ galerie_30_1</button>
+        <div class="gal-filter-bar" id="gal-filter-bar">
           <input class="gal-search" id="gal-search" type="text" placeholder="Suche…">
+          <div id="gal-tabs" class="gal-tabs"></div>
+          <button class="gal-new-folder-btn" id="gal-new-folder-btn">+ Ordner</button>
+        </div>
+        <div class="gal-edit-hint" id="gal-edit-hint">
+          Bilder auf Ordner-Tabs ziehen zum Verschieben · Klick auf Bild zum Auswählen deaktiviert
         </div>
         <div class="gal-grid" id="gal-grid">
           <div class="gal-empty">Bilder werden geladen…</div>
@@ -609,26 +635,182 @@
     const fi   = document.getElementById("gal-file-input");
     zone.addEventListener("click", () => fi.click());
     fi.addEventListener("change", (e) => handleUpload(e.target.files));
-    zone.addEventListener("dragover",  (e) => { e.preventDefault(); zone.classList.add("dragover"); });
-    zone.addEventListener("dragleave", ()  => zone.classList.remove("dragover"));
-    zone.addEventListener("drop",      (e) => { e.preventDefault(); zone.classList.remove("dragover"); handleUpload(e.dataTransfer.files); });
-
-    overlay.querySelectorAll(".gal-filter-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        overlay.querySelectorAll(".gal-filter-btn").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById("gal-search").value = "";
-        renderGallery(btn.dataset.folder);
-      });
+    zone.addEventListener("dragover",  (e) => {
+      e.preventDefault();
+      if (!galState.editMode) zone.classList.add("dragover");
     });
+    zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+    zone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      zone.classList.remove("dragover");
+      if (galState.editMode) return; // kein Upload per Drop im Edit-Mode
+      handleUpload(e.dataTransfer.files);
+    });
+
     document.getElementById("gal-search").addEventListener("input", (e) => {
-      const activeFolder = overlay.querySelector(".gal-filter-btn.active")?.dataset.folder || "all";
+      const activeFolder = document.querySelector(".gal-filter-btn.active")?.dataset.folder || "all";
       renderGallery(activeFolder, e.target.value.trim());
     });
+    document.getElementById("gal-edit-toggle").addEventListener("click", toggleGalEditMode);
+    document.getElementById("gal-new-folder-btn").addEventListener("click", openNewFolderDialog);
   };
 
+  // ─── Tabs dynamisch aufbauen ──────────────────────────────────────────────────
+  function buildFolderTabs(folders) {
+    galState.folders = folders;
+    const tabsEl     = document.getElementById("gal-tabs");
+    if (!tabsEl) return;
+    tabsEl.innerHTML = "";
+
+    const makeTab = (folderKey, label) => {
+      const btn = document.createElement("button");
+      btn.className      = "gal-filter-btn";
+      btn.dataset.folder = folderKey;
+      btn.textContent    = label;
+
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".gal-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("gal-search").value = "";
+        renderGallery(folderKey);
+      });
+
+      if (folderKey !== "all") {
+        btn.addEventListener("dragover", (e) => {
+          if (!galState.editMode) return;
+          e.preventDefault();
+          btn.classList.add("drag-over");
+        });
+        btn.addEventListener("dragleave", () => btn.classList.remove("drag-over"));
+        btn.addEventListener("drop", (e) => {
+          e.preventDefault();
+          btn.classList.remove("drag-over");
+          if (!galState.editMode || !galState.dragItem) return;
+          if (galState.dragItem.folder === folderKey) {
+            window.showNotify("~ Bild ist bereits in diesem Ordner ~", "info");
+            return;
+          }
+          moveImageToFolder(galState.dragItem, folderKey);
+        });
+      }
+      return btn;
+    };
+
+    const allBtn = makeTab("all", "~ Alle");
+    allBtn.classList.add("active");
+    tabsEl.appendChild(allBtn);
+    folders.forEach(f => tabsEl.appendChild(makeTab(f, "~ " + f)));
+  }
+
+  // ─── Edit-Mode Toggle ─────────────────────────────────────────────────────────
+  function toggleGalEditMode() {
+    galState.editMode   = !galState.editMode;
+    const panel         = document.querySelector(".gal-panel");
+    const toggleBtn     = document.getElementById("gal-edit-toggle");
+    const newFolderBtn  = document.getElementById("gal-new-folder-btn");
+    const hint          = document.getElementById("gal-edit-hint");
+
+    panel?.classList.toggle("gal-edit-active", galState.editMode);
+    if (toggleBtn) {
+      toggleBtn.classList.toggle("active", galState.editMode);
+      toggleBtn.textContent = galState.editMode ? "✓ Fertig" : "✎ Ordner verwalten";
+    }
+    if (newFolderBtn) newFolderBtn.style.display = galState.editMode ? "inline-flex" : "none";
+    if (hint)         hint.style.display         = galState.editMode ? "block"       : "none";
+
+    const activeFolder = document.querySelector(".gal-filter-btn.active")?.dataset.folder || "all";
+    renderGallery(activeFolder, document.getElementById("gal-search")?.value || "");
+  }
+
+  // ─── Bild verschieben ─────────────────────────────────────────────────────────
+  async function moveImageToFolder(imgData, targetFolder) {
+    try {
+      const res  = await fetch("/api/images/move", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ folder: imgData.folder, filename: imgData.name, targetFolder }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const imgObj = STATE.allImages.find(i => i.url === imgData.url);
+        if (imgObj) { imgObj.folder = targetFolder; imgObj.url = data.newUrl; }
+        galState.dragItem = null;
+        const activeFolder = document.querySelector(".gal-filter-btn.active")?.dataset.folder || "all";
+        renderGallery(activeFolder, document.getElementById("gal-search")?.value || "");
+        window.showNotify(`~ Verschoben nach ${targetFolder} ~`, "success");
+      } else {
+        window.showNotify("~ " + (data.error || "Fehler") + " ~", "error");
+      }
+    } catch {
+      window.showNotify("~ Fehler beim Verschieben ~", "error");
+    }
+  }
+
+  // ─── Neuer Ordner Dialog ──────────────────────────────────────────────────────
+  function openNewFolderDialog() {
+    if (document.getElementById("gal-folder-dialog")) return;
+    const wrap = document.createElement("div");
+    wrap.id = "gal-folder-dialog";
+    wrap.style.cssText = "position:fixed;inset:0;backdrop-filter:blur(8px) brightness(0.55);-webkit-backdrop-filter:blur(8px) brightness(0.55);background:rgba(10,5,0,0.45);z-index:9999999;display:flex;align-items:center;justify-content:center;";
+    wrap.innerHTML = `
+      <div style="background:rgba(18,10,3,0.78);backdrop-filter:blur(18px);border:1px solid rgba(96,78,20,0.7);border-radius:10px;padding:26px 30px;width:320px;max-width:92vw;box-shadow:0 8px 48px rgba(0,0,0,0.6);font-family:Arial,sans-serif;">
+        <h3 style="color:#c4b47a;font-size:14px;margin-bottom:18px;letter-spacing:1px;text-align:center;">~ Neuer Ordner ~</h3>
+        <label style="display:block;font-size:11px;color:#a19d91;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">Name (Buchstaben, Zahlen, _ -)</label>
+        <input id="gal-folder-input" type="text" placeholder="z.B. galerie_2026"
+          style="width:100%;background:rgba(0,0,0,0.35);border:1px solid rgba(96,78,20,0.6);border-radius:4px;color:#e8dfc8;padding:8px 10px;font-size:13px;outline:none;box-sizing:border-box;transition:border-color 0.15s;">
+        <div id="gal-folder-err" style="color:#c97070;font-size:12px;margin-top:8px;min-height:16px;"></div>
+        <div style="display:flex;gap:10px;margin-top:18px;">
+          <button id="gal-folder-cancel" style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(96,78,20,0.5);background:transparent;color:#a19d91;letter-spacing:1px;transition:all 0.15s;">Abbrechen</button>
+          <button id="gal-folder-save"   style="flex:1;padding:9px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid rgba(179,140,15,0.6);background:transparent;color:#b38c0f;letter-spacing:1px;transition:all 0.15s;">Erstellen</button>
+        </div>
+      </div>`;
+    document.body.appendChild(wrap);
+    const input = document.getElementById("gal-folder-input");
+    input.focus();
+    const close = () => wrap.remove();
+    document.getElementById("gal-folder-cancel").addEventListener("click", close);
+    wrap.addEventListener("click", e => { if (e.target === wrap) close(); });
+    const doCreate = async () => {
+      const name  = input.value.trim().replace(/[^a-zA-Z0-9_-]/g, "").toLowerCase();
+      const errEl = document.getElementById("gal-folder-err");
+      if (!name) { errEl.textContent = "Bitte einen Namen eingeben."; return; }
+      if (galState.folders.includes(name)) { errEl.textContent = "Ordner existiert bereits."; return; }
+      try {
+        const res  = await fetch("/api/folders", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          credentials: "include", body: JSON.stringify({ name }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          close();
+          galState.folders.push(data.name);
+          buildFolderTabs(galState.folders);
+          window.showNotify(`~ Ordner "${data.name}" erstellt ~`, "success");
+        } else {
+          errEl.textContent = data.error || "Fehler";
+        }
+      } catch { errEl.textContent = "Verbindungsfehler"; }
+    };
+    document.getElementById("gal-folder-save").addEventListener("click", doCreate);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter")  doCreate();
+      if (e.key === "Escape") close();
+    });
+  }
+
+  // ─── Galerie öffnen / schließen ───────────────────────────────────────────────
   window.openGallery = async function (target) {
     STATE.currentImgTarget = target !== undefined ? target : null;
+    // Edit-Mode zurücksetzen
+    galState.editMode = false;
+    document.querySelector(".gal-panel")?.classList.remove("gal-edit-active");
+    const tb = document.getElementById("gal-edit-toggle");
+    if (tb) { tb.classList.remove("active"); tb.textContent = "✎ Ordner verwalten"; }
+    const nb = document.getElementById("gal-new-folder-btn");
+    if (nb) nb.style.display = "none";
+    const hint = document.getElementById("gal-edit-hint");
+    if (hint) hint.style.display = "none";
     document.getElementById("admin-gallery-overlay").classList.add("show");
     window.lockScroll();
     await loadImages();
@@ -647,58 +829,79 @@
       const res  = await fetch(CFG.imagesEndpoint);
       const data = await res.json();
       STATE.allImages = data.images;
+      buildFolderTabs(data.folders || []);
       renderGallery("all");
     } catch {
       grid.innerHTML = '<div class="gal-empty" style="color:#c97070">Fehler beim Laden</div>';
     }
   }
 
+  // ─── Galerie rendern ──────────────────────────────────────────────────────────
   function renderGallery(folder, search = "") {
     const grid = document.getElementById("gal-grid");
-    let list   = folder === "all" ? STATE.allImages : STATE.allImages.filter((i) => i.folder === folder);
+    // Nur .webp anzeigen
+    let list = folder === "all" ? STATE.allImages : STATE.allImages.filter(i => i.folder === folder);
+    list = list.filter(i => i.name.toLowerCase().endsWith(".webp"));
     if (search) {
       const q = search.toLowerCase();
-      list = list.filter((i) => i.name.toLowerCase().includes(q));
+      list = list.filter(i => i.name.toLowerCase().includes(q));
     }
     if (!list.length) {
       grid.innerHTML = '<div class="gal-empty">Keine Bilder</div>';
       return;
     }
 
-    // XSS-Fix: Alle Bild-Daten aus der API über escHtml absichern
-    grid.innerHTML = list.map((img) => {
-      const isUpload  = img.folder === "uploads";
-      const safeUrl   = esc(img.url);
-      const safeName  = esc(img.name);
-      const safeFolder= esc(img.folder);
+    grid.innerHTML = list.map(img => {
+      const safeUrl    = esc(img.url);
+      const safeName   = esc(img.name);
+      const safeFolder = esc(img.folder);
       return `
-        <div class="gal-item" data-url="${safeUrl}" data-name="${safeName}" data-folder="${safeFolder}">
+        <div class="gal-item${galState.editMode ? " gal-item-draggable" : ""}"
+             data-url="${safeUrl}" data-name="${safeName}" data-folder="${safeFolder}"
+             ${galState.editMode ? 'draggable="true"' : ""}>
           <div class="gal-img-wrap">
             <img src="${safeUrl}" alt="" loading="lazy">
           </div>
           <div class="gal-item-footer">
             <input class="gal-item-name" value="${safeName}" title="${safeName}"
-              ${isUpload ? "" : 'readonly tabindex="-1"'}>
-            ${isUpload ? `<button class="gal-item-delete" title="Bild löschen">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              ${img.folder === "uploads" ? "" : 'readonly tabindex="-1"'}>
+            <button class="gal-item-delete" title="Bild löschen">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
                 <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-              </svg></button>` : ""}
+              </svg>
+            </button>
           </div>
         </div>`;
     }).join("");
 
-    grid.querySelectorAll(".gal-item").forEach((item) => {
+    grid.querySelectorAll(".gal-item").forEach(item => {
       const url       = item.dataset.url;
       const folder    = item.dataset.folder;
+      const name      = item.dataset.name;
       const nameInput = item.querySelector(".gal-item-name");
       const deleteBtn = item.querySelector(".gal-item-delete");
 
-      item.querySelector(".gal-img-wrap").addEventListener("click", () => selectImage(url));
+      // Bild auswählen – deaktiviert im Edit-Mode
+      item.querySelector(".gal-img-wrap").addEventListener("click", () => {
+        if (galState.editMode) return;
+        selectImage(url);
+      });
 
+      // Drag & Drop im Edit-Mode
+      item.addEventListener("dragstart", (e) => {
+        if (!galState.editMode) { e.preventDefault(); return; }
+        galState.dragItem = { url, name, folder };
+        item.classList.add("gal-dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", name);
+      });
+      item.addEventListener("dragend", () => item.classList.remove("gal-dragging"));
+
+      // Umbenennen – nur uploads
       if (folder === "uploads" && nameInput) {
-        nameInput.addEventListener("click",   (e) => e.stopPropagation());
-        nameInput.addEventListener("keydown", (e) => {
+        nameInput.addEventListener("click",   e => e.stopPropagation());
+        nameInput.addEventListener("keydown", e => {
           if (e.key === "Enter")  { e.preventDefault(); nameInput.blur(); }
           if (e.key === "Escape") { nameInput.value = item.dataset.name; nameInput.blur(); }
         });
@@ -715,11 +918,10 @@
             if (res.ok) {
               item.dataset.name = data.newName;
               item.dataset.url  = data.url;
-              // textContent statt innerHTML für Namen
-              nameInput.value  = data.newName;
-              nameInput.title  = data.newName;
+              nameInput.value   = data.newName;
+              nameInput.title   = data.newName;
               item.querySelector("img").src = data.url;
-              const imgObj = STATE.allImages.find((i) => i.url === url);
+              const imgObj = STATE.allImages.find(i => i.url === url);
               if (imgObj) { imgObj.name = data.newName; imgObj.url = data.url; }
               window.showNotify("~ Umbenannt ~", "success");
             } else {
@@ -733,16 +935,20 @@
         });
       }
 
-      if (folder === "uploads" && deleteBtn) {
-        deleteBtn.addEventListener("click", async (e) => {
+      // Löschen – alle Ordner
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", async e => {
           e.stopPropagation();
           window.cmsConfirm(
-            'Bild "' + item.dataset.name + '" wirklich löschen?',
+            `Bild "${name}" wirklich löschen?\n(.webp + ggf. Original werden entfernt)`,
             async () => {
               try {
-                const res = await fetch("/api/images/uploads/" + encodeURIComponent(item.dataset.name), { method: "DELETE" });
+                const res = await fetch(
+                  `/api/images/${encodeURIComponent(folder)}/${encodeURIComponent(name)}`,
+                  { method: "DELETE", credentials: "include" }
+                );
                 if (res.ok) {
-                  STATE.allImages = STATE.allImages.filter((i) => i.url !== item.dataset.url);
+                  STATE.allImages = STATE.allImages.filter(i => i.url !== item.dataset.url);
                   item.remove();
                   window.showNotify("~ Gelöscht ~", "success");
                 } else {
@@ -842,28 +1048,32 @@
 
   async function handleUpload(files) {
     if (!files?.length) return;
-    const zone = document.getElementById("gal-upload-zone");
+    const zone         = document.getElementById("gal-upload-zone");
+    const activeFolder = document.querySelector(".gal-filter-btn.active")?.dataset.folder || "all";
+    // "all" ist kein echter Ordner → Fallback uploads
+    const targetFolder = (activeFolder === "all") ? "uploads" : activeFolder;
+
     for (const file of files) {
       const sizeStr = formatFileSize(file.size);
-      // textContent statt innerHTML – Dateiname kommt vom Nutzer
       zone.textContent = "";
       const nameSpan = document.createElement("span");
       nameSpan.style.color = "#c4b47a";
       nameSpan.textContent = file.name;
       const sizeSpan = document.createElement("span");
       sizeSpan.style.color = "#604e14";
-      sizeSpan.textContent = ` (${sizeStr}) wird hochgeladen…`;
+      sizeSpan.textContent = ` (${sizeStr}) → ${targetFolder} …`;
       zone.appendChild(nameSpan);
       zone.appendChild(sizeSpan);
 
       const fd = new FormData();
       fd.append("image", file);
+      fd.append("folder", targetFolder);   // Zielordner mitschicken
       try {
         const res = await fetch(CFG.uploadEndpoint, { method: "POST", body: fd });
         if (res.ok) {
           const data = await res.json();
-          STATE.allImages.unshift({ url: data.url, folder: "uploads", name: data.filename });
-          window.showNotify(`~ ${file.name} (${sizeStr}) hochgeladen ~`, "success");
+          STATE.allImages.unshift({ url: data.url, folder: data.folder || targetFolder, name: data.filename });
+          window.showNotify(`~ ${file.name} (${sizeStr}) → ${targetFolder} ~`, "success");
         } else {
           window.showNotify("~ Upload fehlgeschlagen ~", "error");
         }
@@ -872,7 +1082,7 @@
       }
     }
     // Upload-Zone zurücksetzen
-    zone.textContent = "Neues Bild hier ablegen oder klicken zum Auswählen · JPG, PNG, GIF, WEBP · max. 15 MB";
+    zone.textContent = "Neues Bild hier ablegen oder klicken · JPG, PNG, GIF, WEBP · max. 15 MB";
     const newFi      = document.createElement("input");
     newFi.type       = "file";
     newFi.id         = "gal-file-input";
@@ -881,7 +1091,7 @@
     newFi.style.display = "none";
     newFi.addEventListener("change", (e) => handleUpload(e.target.files));
     zone.appendChild(newFi);
-    renderGallery(document.querySelector(".gal-filter-btn.active")?.dataset.folder || "all");
+    renderGallery(activeFolder, document.getElementById("gal-search")?.value || "");
   }
 
   // ─── Notify-Toast ─────────────────────────────────────────────────────────────
