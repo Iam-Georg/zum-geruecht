@@ -97,8 +97,7 @@
         <div class="abar-sep"></div>
         <button class="abar-btn" id="btn-save" disabled>~ Speichern <span id="unsaved-dot"></span></button>
         <div class="abar-sep"></div>
-        ${pdfBtn}
-        <div class="abar-sep"></div>
+        ${pdfBtn ? pdfBtn + '<div class="abar-sep"></div>' : ''}
         <button class="abar-btn" id="btn-add-block-text" title="Textfeld hinzufügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Text</button>
         <button class="abar-btn" id="btn-add-block-img"  title="Bild-Block hinzufügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Bild</button>
         <button class="abar-btn" id="btn-add-block-line" title="Trennlinie einfügen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="2" y1="12" x2="22" y2="12"/></svg> Trennlinie</button>
@@ -124,6 +123,7 @@
 
     bar.style.display = "block";
     document.body.classList.add("admin-active");
+    window.startSessionTimer?.();
 
     // Desktop-Listener
     document.getElementById("btn-toggle-edit").addEventListener("click", window.toggleEditMode);

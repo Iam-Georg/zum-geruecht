@@ -141,8 +141,20 @@
 
     // Cookie vorhanden:
     fetch("/api/check-auth")
-      .then((r) => { if (r.ok) loadAdminScripts(); })
-      .catch(() => {/* netzwerkfehler – kein admin */});
+      .then((r) => {
+        if (r.ok) {
+          loadAdminScripts();
+        } else {
+          // Nicht eingeloggt → sicherstellen dass Login-Icon angezeigt wird
+          const btn = document.getElementById("admin-auth-btn");
+          if (btn) { btn.innerHTML = SVG_LOGIN; btn.title = "Admin Login"; }
+        }
+      })
+      .catch(() => {
+        // Netzwerkfehler – Login-Icon setzen
+        const btn = document.getElementById("admin-auth-btn");
+        if (btn) { btn.innerHTML = SVG_LOGIN; btn.title = "Admin Login"; }
+      });
   }
 
   if (document.readyState === "loading")

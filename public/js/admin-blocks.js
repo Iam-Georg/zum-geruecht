@@ -22,10 +22,14 @@
     editables.forEach((el) => el.removeAttribute("contenteditable"));
 
     const clone = document.documentElement.cloneNode(true);
+
+    // Admin-UI-Elemente aus dem gespeicherten HTML entfernen
     [
-      "#admin-bar", "#admin-footer-link", "#admin-login-modal",
+      "#admin-bar", "#admin-auth-btn", "#admin-footer-link", "#admin-login-modal",
       "#admin-gallery-overlay", "#admin-text-toolbar", "#admin-notify",
       "#admin-edit-styles", "#btn-add-termin",
+      "#cms-dialog-overlay", "#backup-modal-overlay", "#img-scale-bar",
+      "#pw-modal-overlay", "#link-modal-overlay", "#gal-folder-dialog",
     ].forEach((sel) => clone.querySelector(sel)?.remove());
 
     clone.querySelectorAll(".termin-delete").forEach((el) => el.remove());
@@ -39,12 +43,17 @@
     });
     clone.querySelector("#playground-banner")?.remove();
     clone.querySelectorAll(".playground-section-label").forEach((el) => el.remove());
+
+    // Alle dynamisch geladenen Admin-Scripts entfernen (nur admin-loader.js bleibt)
     clone.querySelectorAll('script[src*="moz-extension"]').forEach((el) => el.remove());
-    clone.querySelectorAll('script[src*="admin-edit"]').forEach((el) => el.remove());
+    [
+      'script[src*="admin-state"]',
+      'script[src*="admin-ui"]',
+      'script[src*="admin-blocks"]',
+      'script[src*="admin-edit"]',
+    ].forEach((sel) => clone.querySelectorAll(sel).forEach((el) => el.remove()));
+
     clone.querySelector("body").classList.remove("edit-mode", "admin-active");
-    const sc = document.createElement("script");
-    sc.src   = "/js/admin-edit.js";
-    clone.querySelector("body").appendChild(sc);
 
     editables.forEach((el) => el.setAttribute("contenteditable", "true"));
 

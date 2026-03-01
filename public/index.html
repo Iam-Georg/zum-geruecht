@@ -1,396 +1,691 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-
-<head>
-    <meta charset="utf-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>Zum Gerücht – Die letzte Kaschemme – Dresden Laubegast</title>
-    <meta content="Zum Gerücht - Die letzte Kaschemme - Saufen schmeckt!" name="description">
-    <meta content="Zum Gerücht,Altlaubegast,Laubegast,Hausbrauerei Laubegast,Krautnudeln,Kneipe" name="keywords">
-    <meta content="de-DE" name="language">
-    <meta content="follow,index" name="robots">
-    <meta content="5 days" name="revisit-after">
-    <meta content="telephone=no" name="format-detection">
-    <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
-    <link href="images/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="css/zum-geruecht.css" media="all" rel="stylesheet" type="text/css">
-    <link href="css/animate.min.css" rel="stylesheet" type="text/css">
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="/css/admin-edit.css" rel="stylesheet">
-    <meta content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png" name="twitter:image">
-    <meta content="Kneipe, Hausbrauerei und gute Küche in Dresden-Laubegast. Di–So ab 19 Uhr, Montag Ruhetag."
-        name="twitter:description">
-    <meta content="Zum Gerücht – Die letzte Kaschemme – Dresden Laubegast" name="twitter:title">
-    <meta content="summary" name="twitter:card">
-    <meta content="Logo Zum Gerücht" property="og:image:alt">
-    <meta content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png" property="og:image">
-    <meta content="https://www.zum-geruecht.de/" property="og:url">
-    <meta content="Kneipe, Hausbrauerei und gute Küche in Dresden-Laubegast. Di–So ab 19 Uhr, Montag Ruhetag."
-        property="og:description">
-    <meta content="Zum Gerücht – Die letzte Kaschemme – Dresden Laubegast" property="og:title">
-    <meta content="de_DE" property="og:locale">
-    <meta content="Zum Gerücht – Die letzte Kaschemme" property="og:site_name">
-    <meta content="website" property="og:type">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-</head>
+    <meta
+      content="Kneipe, Hausbrauerei und gute Küche in Dresden-Laubegast. Di–So ab 19 Uhr, Mo Ruhetag. Altlaubegast 5, 01279 Dresden."
+      name="description"
+    />
+    <meta content="follow,index" name="robots" />
+    <link rel="canonical" href="https://www.zum-geruecht.de/" />
+    <meta content="telephone=no" name="format-detection" />
+    <link
+      href="images/apple-touch-icon-114x114.png"
+      rel="apple-touch-icon"
+      sizes="114x114"
+    />
+    <link
+      href="images/favicon-96x96.png"
+      rel="icon"
+      sizes="96x96"
+      type="image/png"
+    />
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link
+      href="css/zum-geruecht.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="css/animate.min.css" rel="stylesheet" type="text/css" />
+    <link
+      href="font-awesome/css/font-awesome.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="/css/admin-edit.css" rel="stylesheet" />
+    <meta
+      content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png"
+      name="twitter:image"
+    />
+    <meta
+      content="Kneipe, Hausbrauerei und gute Küche in Dresden-Laubegast. Di–So ab 19 Uhr, Montag Ruhetag."
+      name="twitter:description"
+    />
+    <meta
+      content="Zum Gerücht – Die letzte Kaschemme – Dresden Laubegast"
+      name="twitter:title"
+    />
+    <meta content="summary" name="twitter:card" />
+    <meta content="Logo Zum Gerücht" property="og:image:alt" />
+    <meta
+      content="https://www.zum-geruecht.de/images/logo-zum-geruecht.png"
+      property="og:image"
+    />
+    <meta content="https://www.zum-geruecht.de/" property="og:url" />
+    <meta
+      content="Kneipe, Hausbrauerei und gute Küche in Dresden-Laubegast. Di–So ab 19 Uhr, Montag Ruhetag."
+      property="og:description"
+    />
+    <meta
+      content="Zum Gerücht – Die letzte Kaschemme – Dresden Laubegast"
+      property="og:title"
+    />
+    <meta content="de_DE" property="og:locale" />
+    <meta
+      content="Zum Gerücht – Die letzte Kaschemme"
+      property="og:site_name"
+    />
+    <meta content="website" property="og:type" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BarOrPub",
+        "name": "Zum Gerücht – Die letzte Kaschemme",
+        "url": "https://www.zum-geruecht.de/",
+        "telephone": "+49-351-2513425",
+        "email": "info@zum-geruecht.de",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Altlaubegast 5",
+          "addressLocality": "Dresden",
+          "postalCode": "01279",
+          "addressCountry": "DE"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "opens": "19:00",
+            "closes": "01:00"
+          }
+        ],
+        "servesCuisine": "German",
+        "priceRange": "€€",
+        "image": "https://www.zum-geruecht.de/images/logo-zum-geruecht.png",
+        "sameAs": [
+          "https://www.facebook.com/zumgeruecht/",
+          "https://www.instagram.com/zum_geruecht/"
+        ]
+      }
+    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
 
-<body class="" style="">
+  <body style="" class="">
     <header role="banner">
-        <p><a id="top"></a></p>
-        <div id="spacer_top"></div>
-        <div class="container">
-            <a href="/"><img alt="Logo zum Gerücht - Zur Saufen schmeckt Startseite" class="img-responsive center-block"
-                    src="images/logo-zum-geruecht.png" title=""></a>
-        </div>
-    </header><br><br>
+      <p><a id="top"></a></p>
+      <div id="spacer_top"></div>
+      <div class="container">
+        <a href="/"
+          ><img
+            alt="Logo zum Gerücht - Zur Saufen schmeckt Startseite"
+            class="img-responsive center-block"
+            src="images/logo-zum-geruecht.png"
+            title=""
+        /></a>
+      </div>
+    </header>
+    <br /><br />
     <div class="container">
-        <nav class="navbar navbar-default">
-            <div class="navbar-header">
-                <button aria-expanded="false" class="navbar-toggle collapsed"
-                    data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Saufen schmeckt :)</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">~ Hereinspaziert</a></li>
-                    <li><a href="/speisekarte">~ Speisekarte</a></li>
-                    <li><a href="/termine">~ Termine</a></li>
-                    <li><a href="/reservierungsanfrage">~ Reservierungen</a></li>
-                    <li><a href="/mediathek">~ Galerie</a></li>
-                    <li><a href="/geschichte">~ Geschichte</a></li>
-                    <li><a href="/jobs">~ Jobs</a></li>
-                    <li><a href="https://hausbrauerei-laubegast.de/" rel="external noopener noreferrer" title=""
-                            target="_blank">~ BierShop</a></li>
-                    <li><a href="/anfahrt">~ Anfahrt</a></li>
-                </ul>
-            </div>
-        </nav>
+      <nav class="navbar navbar-default">
+        <div class="navbar-header">
+          <button
+            aria-expanded="false"
+            class="navbar-toggle collapsed"
+            data-target="#bs-example-navbar-collapse-1"
+            data-toggle="collapse"
+            type="button"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Saufen schmeckt :)</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">~ Hereinspaziert</a></li>
+            <li><a href="/speisekarte">~ Speisekarte</a></li>
+            <li><a href="/termine">~ Termine</a></li>
+            <li><a href="/reservierungsanfrage">~ Reservierungen</a></li>
+            <li><a href="/mediathek">~ Galerie</a></li>
+            <li><a href="/geschichte">~ Geschichte</a></li>
+            <li><a href="/jobs">~ Jobs</a></li>
+            <li>
+              <a
+                href="https://hausbrauerei-laubegast.de/"
+                rel="external noopener noreferrer"
+                title=""
+                target="_blank"
+                >~ BierShop</a
+              >
+            </li>
+            <li><a href="/anfahrt">~ Anfahrt</a></li>
+          </ul>
+        </div>
+      </nav>
     </div>
     <div class="container">
-        <div id="wrapper">
-            <div id="wrapper-box">
-                <div id="wrapper-content-box">
-                    <div class="">
-                        <img alt="Seitentitel Hereinspaziert in alter Schrift auf rostigen Hintergrund"
-                            class="img-responsive letter-spacer animated fadeIn" src="images/letter-home.png">
-                    </div>
-                    <!-- <img src="images/geb_33.jpg" alt="Plakat 33 Jahre Zum Gerücht" class="img-responsive picture-center"><br> -->
-                    <div class="nachruf cms-block">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <a href="/bilder-kneipe/erinnerung-lieber-thomas.webp" data-toggle="lightbox"><img
-                                        alt="Erinnerungsbild von Thomas Böhme" class="img-responsive picture-center"
-                                        loading="lazy" src="/bilder-kneipe/erinnerung-lieber-thomas.webp" title=""></a>
-                            </div>
-                        </div>
-                        <h2>
-                            <font color="#a29c8a">"Und wenn du dich getröstet hast, wirst du froh sein, mich gekannt zu
-                                haben.<br>
-                                Du wirst immer mein Freund sein.<br>Du wirst dich daran erinnern, wie gerne du mit mir
-                                gelacht hast."</font>
-                        </h2>
-                        <p><i>(Antoine de Saint-Exupéry)</i></p>
-                        <p>Unser lieber Vati Thomas ist in der Nacht vom 07.05. zum 08.05.2022 friedlich
-                            eingeschlafen.<br>~ ~ ~ ~ ~<br><b>Sein letzter Wunsch an uns ALLE: Keine Traurigkeit…
-                                Rock’n’Roll</b></p>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png">
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <p><b>~ ... Ihr durstig Leut und frisch den Durst gelöscht! Prost! ~</b></p>
-                    </div>
-                    <div class="">
-                        <h2>~ Zum Gerücht - Die Gästewohlfühlsammelstelle in Laubegast ~</h2>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <a href="mediathek#30jahre" class=""><img
-                                alt="Bildcollage von Bassisten und 30 Jahre Zum Gerücht"
-                                class="img-responsive picture-center rahmen" loading="lazy"
-                                src="/galerie_30_1/opener-30jahre.webp"></a>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <h2>~ Unsere Öffnungszeiten ~</h2>
-                    </div>
-                    <div class="">
-                        <p>Dienstag bis Sonntag: 19.00 - 01.00 Uhr<br><i>Montag ist Ruhetag</i></p>
-                    </div>
-
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png">
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <p>Um 21:00 Uhr Küchenschluss! Außer Freitag &amp; Samstag, da geht’s bis 22:00
-                            Uhr!<br>Also kommt
-                            zeitig vorbei zum Mampfen.</p>
-                    </div>
-                    <div class="">
-                        <p>Unser Bier kommt aus der eigenen Hausbrauerei Laubegast.</p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <a href="/jobs"><img alt="rustikale Schaltfläche Jobs im Gerücht" class="img-responsive"
-                                    loading="lazy" src="images/schalter-jobs.png" style="margin:0 auto;"
-                                    title="Wir suchen Dich"></a>
-                        </div>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png">
-                        </div>
-                    </div>
-                    <div class="">
-                        <h2>~ Liebe Gästileins, Ihr könnt unser Bier auch <font color="#a29c8a"><a
-                                    href="http://www.hausbrauerei-laubegast.de/home.htm"
-                                    rel="external noopener noreferrer" target="_blank">online kaufen</a></font>.</h2>
-                    </div>
-                    <div class="">
-                        <h2>~ Oder bestellt euch einen Gutschein ~</h2>
-                    </div>
-                    <div class="">
-                        <p>und bereitet euch somit schon jetzt für euren nächsten Kneipenbesuch vor, schenkt
-                            Freunden eine
-                            Freude. Besorgt euch einen Gutschein.
-                            Überweist den gewünschten Wert des Gutscheines (mind. 10,00 EUR) an u.g. Kontoverbindung.
-                            Wichtig! Benennt im Verwendungszweck eure Postanschrift mit Namen, Straße, Hausnummer, Plz
-                            und
-                            Ort. Oder - am einfachsten und schnellsten für uns ist es den Gutschein per Mail zu
-                            verschicken.
-                            Dazu benötigen wir natürlich eine verbindliche Mailadresse im Verwendungszweck. Wir senden
-                            euch
-                            den Gutschein umgehend zu, doch beachtet unsere Fans kommen von überall her, wir versenden
-                            die
-                            Gutscheine nur innerhalb Deutschlands. Keine Auszahlung Restbetrag möglich, sowie Aufteilung
-                            auf
-                            andere Tage.</p>
-                    </div>
-                    <div class="">
-                        <p>"Zum Gerücht" bei der<br>Ostsäschischen Sparkasse Dresden<br>IBAN DE13 8505 0300 0221
-                            1767
-                            48<br>BIC OSDDDE81XXX<br>
-                        </p>
-                    </div>
-                    <div class="">
-                        <p>Unser Bier kommt aus der eigenen Hausbrauerei Laubegast.</p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png">
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <h2>~ Hier könnt Ihr Gastilein's in die Kneipe gucken ~</h2>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-4 col-sm-4">
-                            <a aria-haspopup="dialog" data-footer="Die letzte Kaschemme" data-gallery="set1"
-                                data-title="Zum Gerücht" data-toggle="lightbox" href="bilder-kneipe/105.jpg">
-                                <img alt="Aussenansicht bei Nacht von der Kneipe Zum Gerücht"
-                                    class="img-responsive rahmen" loading="lazy" src="bilder-kneipe/105.jpg"></a>
-                        </div>
-                        <div class="col-md-4 col-sm-4">
-                            <a aria-haspopup="dialog" data-footer="Die letzte Kaschemme" data-gallery="set1"
-                                data-title="Zum Gerücht" data-toggle="lightbox" href="bilder-kneipe/150.jpg">
-                                <img alt="Innenansicht der Kneipe Zum Gerücht" class="img-responsive rahmen"
-                                    loading="lazy" src="bilder-kneipe/150.jpg"></a>
-                        </div>
-                        <div class="col-md-4 col-sm-4">
-                            <a aria-haspopup="dialog" data-footer="Die letzte Kaschemme" data-gallery="set1"
-                                data-title="Zum Gerücht" data-toggle="lightbox" href="bilder-kneipe/140.jpg">
-                                <img alt="Innenansicht der Kneipe Zum Gerücht mit Fischaugenobjektiv"
-                                    class="img-responsive rahmen" loading="lazy" src="bilder-kneipe/140.jpg"></a>
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <h2>~ Das Laubegaster Bier ~</h2>
-                    </div>
-                    <div class="">
-                        <p>Im täglichen Sortiment gibt es zwei Biere aus der eigenen <a
-                                href="http://www.hausbrauerei-laubegast.de/home.htm" rel="external noopener noreferrer"
-                                target="_blank">Hausbrauerei
-                                Laubegast</a>. Das Helle Bier zeichnet sich durch seinen fein gehopften Geschmack
-                            verbunden mit einer fruchtigen Note und einer Stammwürze von 11,5° aus. Am 12.Juli des
-                            Jahres 2008 gab es den Festbieranstich mit dem lecker roten Laubegaster Festbier. Dieses
-                            Bier besticht durch seine Farbe - rot - wie der Name schon sagt und seinem reichhaltigen
-                            Geschmack resultierend aus vier verschiedenen Malzen. Das Bier hat eine <b>Stammwürze von
-                                12,4°</b>.</p>
-                    </div>
-                    <div class="">
-                        <p>Beide Biere sind obergärig und unfiltriert. Das macht sie so gesund - denn Hefe ist
-                            gesund!
-                            Etwa 200 Gläser dieser Biere enthalten soviel Vitamine wie eine Orange. Laut
-                            Laboruntersuchungen hat das Laubegaster Bier Alkohol im Bestand. Somit ist einwandfrei
-                            sicher gestellt daß sich nach dem Genuß einiger Biere auch die Leber in höchster Freude
-                            (endlich nicht mehr Arbeitslos!) befindet.
-                            Um der permanenten Nachfrage nach diesem wundervollen, vollmundigem, heilenden Gerstensaft
-                            genüge zu tun musste gehandelt werden. Und so kann man sich problemlos das Bier in der
-                            Kneipe <a data-footer="2 Liter Bierkrug für daheeme Jochen" data-gallery="set2"
-                                data-title="Zum Gerücht - Die letzte Kaschemme" data-toggle="lightbox"
-                                href="images/zweiliterbierkrug.jpg"><b> im 2L Krug</b></a> abfüllen
-                            lassen.</p>
-                    </div>
-                    <div class="">
-                        <p>~ <a href="/speisekarte">Lecker Schmackofatz gibts hier</a> ~</p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <a href="/speisekarte"><img alt="Grafischer Schalter zur Speisekarte" class="img-responsive"
-                                    loading="lazy" src="images/schalter-speisekarte.png" style="margin:0 auto;"
-                                    title="Zur Speisekarte"></a>
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <h2>~ Reservierungen ~</h2>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <p>Die Zeiten sind hektisch und schnell. Wir nur manchmal. Deswegen - Tischreservierungen
-                            bitte
-                            über <a href="/anfrage">Anfragen</a> immer erst für den Folgetag (oder später) und bitte
-                            nicht abendlicher als 20.00 Uhr. Desweiteren sei darauf hingewiesen daß vielleicht alles
-                            schon vorbestellt voll ist und somit eine weitere Vorbestellung aus Völligkeitsgründen leer
-                            bleibt? Insofern ist das gute alte Telefon immer noch die bessere Alternative - wenn denn
-                            auch jemand ran geht.<br>Altlaubegast 5, 01279 Dresden - Telefon 0351 / 251 34 25</p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png"
-                                title="">
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <p><b>~ Alle Bildlein fein könnt Ihr hier gucken ~</b></p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <a href="/mediathek"><img alt="grafischer Schalter Zur Galerie" class="img-responsive"
-                                    loading="lazy" src="images/schalter-galerie.png" style="margin:0 auto;"></a>
-                        </div>
-                    </div>
-                    <div class="">
-                        <p>Noch mehr Informationen bei <a href="https://www.facebook.com/zumgeruecht/"
-                                rel="external noopener noreferrer" title="Zum Gerücht bei Facebook" target="_blank">"Zum
-                                GerüchteFacebook"</a></p>
-                    </div>
-                    <div class="">
-                        <div class="spacer_break"></div>
-                    </div>
-                    <div class="">
-                        <p>Ps.: Wie wird heutzutage der Gang in´s Gerücht tituliert? "Zum Beichten
-                            (saufen) in die
-                            Thomas-Kirche (der Wirt heisst Thomas)." Für ganz, ganz viele liebe Gästileins ist die
-                            allerletzte Kaschemme, Kneipe auch schon zum zweiten Wohnzimmer geworden. Ja, so ist das.
-                        </p>
-                    </div>
-                    <div class="">
-                        <p><a href="http://zum-geruecht.de/Rauchverbot.htm" rel="external noopener noreferrer"
-                                target="_blank">~ Das große Abrauchen vom
-                                31.01.2008 ~</a></p>
-                    </div>
-                    <div class="row cms-block">
-                        <div class="col-md-12 col-sm-12">
-                            <img alt="Grafische Trennlinie zwischen Inhaltsbereichen"
-                                class="img-responsive picture-center" loading="lazy" src="images/haarlinie.png">
-                        </div>
-                    </div>
-
-
-
-                    <div class="cms-block row" style="text-align: center;">
-
-                    </div>
-
+      <div id="wrapper">
+        <div id="wrapper-box">
+          <div id="wrapper-content-box">
+            <div class="">
+              <img
+                alt="Seitentitel Hereinspaziert in alter Schrift auf rostigen Hintergrund"
+                class="img-responsive letter-spacer animated fadeIn"
+                src="images/letter-home.png"
+              />
+            </div>
+            <!-- <img src="images/geb_33.jpg" alt="Plakat 33 Jahre Zum Gerücht" class="img-responsive picture-center"><br> -->
+            <div class="nachruf cms-block">
+              <div class="row">
+                <div class="col-md-12 col-sm-12">
+                  <a
+                    href="/bilder-kneipe/erinnerung-lieber-thomas.webp"
+                    data-toggle="lightbox"
+                    ><img
+                      alt="Erinnerungsbild von Thomas Böhme"
+                      class="img-responsive picture-center"
+                      loading="lazy"
+                      src="/bilder-kneipe/erinnerung-lieber-thomas.webp"
+                      title=""
+                  /></a>
                 </div>
+              </div>
+              <h2>
+                <span style="color: #a29c8a"
+                  >"Und wenn du dich getröstet hast, wirst du froh sein, mich
+                  gekannt zu haben.<br />
+                  Du wirst immer mein Freund sein.<br />Du wirst dich daran
+                  erinnern, wie gerne du mit mir gelacht hast."</span
+                >
+              </h2>
+              <p><i>(Antoine de Saint-Exupéry)</i></p>
+              <p>
+                Unser lieber Vati Thomas ist in der Nacht vom 07.05. zum
+                08.05.2022 friedlich eingeschlafen.<br />~ ~ ~ ~ ~<br /><b
+                  >Sein letzter Wunsch an uns ALLE: Keine Traurigkeit…
+                  Rock’n’Roll</b
+                >
+              </p>
             </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                />
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <p>
+                <b
+                  >~ ... Ihr durstig Leut und frisch den Durst gelöscht! Prost!
+                  ~</b
+                >
+              </p>
+            </div>
+            <div class="">
+              <h2>
+                ~ Zum Gerücht - Die Gästewohlfühlsammelstelle in Laubegast ~
+              </h2>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <a href="mediathek#30jahre" class=""
+                ><img
+                  alt="Bildcollage von Bassisten und 30 Jahre Zum Gerücht"
+                  class="img-responsive picture-center rahmen"
+                  loading="lazy"
+                  src="/galerie_30_1/opener-30jahre.webp"
+              /></a>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <h2>~ Unsere Öffnungszeiten ~</h2>
+            </div>
+            <div class="">
+              <p>
+                Dienstag bis Sonntag: 19.00 - 01.00 Uhr<br /><i
+                  >Montag ist Ruhetag</i
+                >
+              </p>
+            </div>
+
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                />
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <p>
+                Um 21:00 Uhr Küchenschluss! Außer Freitag &amp; Samstag, da
+                geht’s bis 22:00 Uhr!<br />Also kommt zeitig vorbei zum Mampfen.
+              </p>
+            </div>
+            <div class="">
+              <p>Unser Bier kommt aus der eigenen Hausbrauerei Laubegast.</p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <a href="/jobs"
+                  ><img
+                    alt="rustikale Schaltfläche Jobs im Gerücht"
+                    class="img-responsive"
+                    loading="lazy"
+                    src="images/schalter-jobs.png"
+                    style="margin: 0 auto"
+                    title="Wir suchen Dich"
+                /></a>
+              </div>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                />
+              </div>
+            </div>
+            <div class="">
+              <h2>
+                ~ Liebe Gästileins, Ihr könnt unser Bier auch
+                <span style="color: #a29c8a"
+                  ><a
+                    href="https://www.hausbrauerei-laubegast.de/"
+                    rel="external noopener noreferrer"
+                    target="_blank"
+                    >online kaufen</a
+                  ></span
+                >.
+              </h2>
+            </div>
+            <div class="">
+              <h2>~ Oder bestellt euch einen Gutschein ~</h2>
+            </div>
+            <div class="">
+              <p>
+                und bereitet euch somit schon jetzt für euren nächsten
+                Kneipenbesuch vor, schenkt Freunden eine Freude. Besorgt euch
+                einen Gutschein. Überweist den gewünschten Wert des Gutscheines
+                (mind. 10,00 EUR) an u.g. Kontoverbindung. Wichtig! Benennt im
+                Verwendungszweck eure Postanschrift mit Namen, Straße,
+                Hausnummer, Plz und Ort. Oder - am einfachsten und schnellsten
+                für uns ist es den Gutschein per Mail zu verschicken. Dazu
+                benötigen wir natürlich eine verbindliche Mailadresse im
+                Verwendungszweck. Wir senden euch den Gutschein umgehend zu,
+                doch beachtet unsere Fans kommen von überall her, wir versenden
+                die Gutscheine nur innerhalb Deutschlands. Keine Auszahlung
+                Restbetrag möglich, sowie Aufteilung auf andere Tage.
+              </p>
+            </div>
+            <div class="">
+              <p>
+                "Zum Gerücht" bei der<br />Ostsäschischen Sparkasse Dresden<br />IBAN
+                DE13 8505 0300 0221 1767 48<br />BIC OSDDDE81XXX<br />
+              </p>
+            </div>
+            <div class="">
+              <p>Unser Bier kommt aus der eigenen Hausbrauerei Laubegast.</p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                />
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <h2>~ Hier könnt Ihr Gastilein's in die Kneipe gucken ~</h2>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-4 col-sm-4">
+                <a
+                  aria-haspopup="dialog"
+                  data-footer="Die letzte Kaschemme"
+                  data-gallery="set1"
+                  data-title="Zum Gerücht"
+                  data-toggle="lightbox"
+                  href="bilder-kneipe/105.jpg"
+                >
+                  <img
+                    alt="Aussenansicht bei Nacht von der Kneipe Zum Gerücht"
+                    class="img-responsive rahmen"
+                    loading="lazy"
+                    src="bilder-kneipe/105.jpg"
+                /></a>
+              </div>
+              <div class="col-md-4 col-sm-4">
+                <a
+                  aria-haspopup="dialog"
+                  data-footer="Die letzte Kaschemme"
+                  data-gallery="set1"
+                  data-title="Zum Gerücht"
+                  data-toggle="lightbox"
+                  href="bilder-kneipe/150.jpg"
+                >
+                  <img
+                    alt="Innenansicht der Kneipe Zum Gerücht"
+                    class="img-responsive rahmen"
+                    loading="lazy"
+                    src="bilder-kneipe/150.jpg"
+                /></a>
+              </div>
+              <div class="col-md-4 col-sm-4">
+                <a
+                  aria-haspopup="dialog"
+                  data-footer="Die letzte Kaschemme"
+                  data-gallery="set1"
+                  data-title="Zum Gerücht"
+                  data-toggle="lightbox"
+                  href="bilder-kneipe/140.jpg"
+                >
+                  <img
+                    alt="Innenansicht der Kneipe Zum Gerücht mit Fischaugenobjektiv"
+                    class="img-responsive rahmen"
+                    loading="lazy"
+                    src="bilder-kneipe/140.jpg"
+                /></a>
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <h2>~ Das Laubegaster Bier ~</h2>
+            </div>
+            <div class="">
+              <p>
+                Im täglichen Sortiment gibt es zwei Biere aus der eigenen
+                <a
+                  href="https://www.hausbrauerei-laubegast.de/"
+                  rel="external noopener noreferrer"
+                  target="_blank"
+                  >Hausbrauerei Laubegast</a
+                >. Das Helle Bier zeichnet sich durch seinen fein gehopften
+                Geschmack verbunden mit einer fruchtigen Note und einer
+                Stammwürze von 11,5° aus. Am 12.Juli des Jahres 2008 gab es den
+                Festbieranstich mit dem lecker roten Laubegaster Festbier.
+                Dieses Bier besticht durch seine Farbe - rot - wie der Name
+                schon sagt und seinem reichhaltigen Geschmack resultierend aus
+                vier verschiedenen Malzen. Das Bier hat eine
+                <b>Stammwürze von 12,4°</b>.
+              </p>
+            </div>
+            <div class="">
+              <p>
+                Beide Biere sind obergärig und unfiltriert. Das macht sie so
+                gesund - denn Hefe ist gesund! Etwa 200 Gläser dieser Biere
+                enthalten soviel Vitamine wie eine Orange. Laut
+                Laboruntersuchungen hat das Laubegaster Bier Alkohol im Bestand.
+                Somit ist einwandfrei sicher gestellt daß sich nach dem Genuß
+                einiger Biere auch die Leber in höchster Freude (endlich nicht
+                mehr Arbeitslos!) befindet. Um der permanenten Nachfrage nach
+                diesem wundervollen, vollmundigem, heilenden Gerstensaft genüge
+                zu tun musste gehandelt werden. Und so kann man sich problemlos
+                das Bier in der Kneipe
+                <a
+                  data-footer="2 Liter Bierkrug für daheeme Jochen"
+                  data-gallery="set2"
+                  data-title="Zum Gerücht - Die letzte Kaschemme"
+                  data-toggle="lightbox"
+                  href="images/zweiliterbierkrug.jpg"
+                  ><b> im 2L Krug</b></a
+                >
+                abfüllen lassen.
+              </p>
+            </div>
+            <div class="">
+              <p>
+                ~ <a href="/speisekarte">Lecker Schmackofatz gibt's hier</a> ~
+              </p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <a href="/speisekarte"
+                  ><img
+                    alt="Grafischer Schalter zur Speisekarte"
+                    class="img-responsive"
+                    loading="lazy"
+                    src="images/schalter-speisekarte.png"
+                    style="margin: 0 auto"
+                    title="Zur Speisekarte"
+                /></a>
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <h2>~ Reservierungen ~</h2>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <p>
+                Die Zeiten sind hektisch und schnell. Wir nur manchmal. Deswegen
+                - Tischreservierungen bitte über
+                <a href="/anfrage">Anfragen</a> immer erst für den Folgetag
+                (oder später) und bitte nicht abendlicher als 20.00 Uhr.
+                Desweiteren sei darauf hingewiesen daß vielleicht alles schon
+                vorbestellt voll ist und somit eine weitere Vorbestellung aus
+                Völligkeitsgründen leer bleibt? Insofern ist das gute alte
+                Telefon immer noch die bessere Alternative - wenn denn auch
+                jemand ran geht.<br />Altlaubegast 5, 01279 Dresden - Telefon
+                0351 / 251 34 25
+              </p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                  title=""
+                />
+              </div>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <p><b>~ Alle Bildlein fein könnt Ihr hier gucken ~</b></p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <a href="/mediathek"
+                  ><img
+                    alt="grafischer Schalter Zur Galerie"
+                    class="img-responsive"
+                    loading="lazy"
+                    src="images/schalter-galerie.png"
+                    style="margin: 0 auto"
+                /></a>
+              </div>
+            </div>
+            <div class="">
+              <p>
+                Noch mehr Informationen bei
+                <a
+                  href="https://www.facebook.com/zumgeruecht/"
+                  rel="external noopener noreferrer"
+                  title="Zum Gerücht bei Facebook"
+                  target="_blank"
+                  >"Zum GerüchteFacebook"</a
+                >
+              </p>
+            </div>
+            <div class="">
+              <div class="spacer_break"></div>
+            </div>
+            <div class="">
+              <p>
+                Ps.: Wie wird heutzutage der Gang in´s Gerücht tituliert? "Zum
+                Beichten (saufen) in die Thomas-Kirche (der Wirt heisst
+                Thomas)." Für ganz, ganz viele liebe Gästileins ist die
+                allerletzte Kaschemme, Kneipe auch schon zum zweiten Wohnzimmer
+                geworden. Ja, so ist das.
+              </p>
+            </div>
+            <div class="">
+              <p>
+                <a
+                  href="https://zum-geruecht.de/Rauchverbot.htm"
+                  rel="external noopener noreferrer"
+                  target="_blank"
+                  >~ Das große Abrauchen vom 31.01.2008 ~</a
+                >
+              </p>
+            </div>
+            <div class="row cms-block">
+              <div class="col-md-12 col-sm-12">
+                <img
+                  alt="Grafische Trennlinie zwischen Inhaltsbereichen"
+                  class="img-responsive picture-center"
+                  loading="lazy"
+                  src="images/haarlinie.png"
+                />
+              </div>
+            </div>
+
+            <div class="cms-block row" style="text-align: center"></div>
+          </div>
         </div>
+      </div>
     </div>
     <div class="container">
-        <footer role="contentinfo">
-            <div id="footer">
-                <img alt="" class="img-responsive" src="images/footer1.png" title="">
-                <a href="http://www.hausbrauerei-laubegast.de/home.htm" rel="external noopener noreferrer"
-                    target="_blank" class=""><img alt="Hausbrauerei Laubegast" class="img-responsive"
-                        src="images/footer2.png" title="Hausbrauerei Laubegast"></a>
-                <p class="">Zum Gerücht - Die letzte Kaschemme<br>Altlaubegast 5, 01279 Dresden<br>Telefon: 0351 – 251
-                    34
-                    25<br><a href="mailto:info@zum-geruecht.de">info@zum-geruecht.de</a></p>
-                <p class=""></p>
-                <div class="spacer_break"></div>
-                <p class=""><a href="https://goo.gl/maps/PePtEP8hVgw5PGWM8" rel="external noopener noreferrer"
-                        target="_blank">Anfahrt</a><a href="/reservierungsanfrage">Anfragen</a><a
-                        href="https://hausbrauerei-laubegast.de/" rel="external noopener noreferrer" target="_blank">Zum
-                        BierShop</a><a href="https://www.facebook.com/zumgeruecht" rel="external noopener noreferrer"
-                        title="Zum Gerücht bei Facebook" target="_blank">GerüchteFacebook</a><a
-                        href="https://www.instagram.com/zum_geruecht/" rel="external noopener noreferrer"
-                        title="Zum Gerücht bei Instagram" target="_blank">GerüchteInstagram</a><a
-                        href="/datenschutz">Datenschutzerklärung</a><a href="/impressum">Impressum</a></p>
-                <div class="spacer_break"></div>
-                <p class=""><a href="https://www.dresden-central.de/" rel="external noopener noreferrer"
-                        target="_blank">Gästewohnung im Barockviertel Dresden</a>
-                </p>
-                <p class=""><a href="http://www.ravenshope.de/" rel="external noopener noreferrer"
-                        target="_blank">Chillout Linie
-                        von Bert Stephan</a></p>
-                <p class=""><a href="https://www.kayak.co.uk/Dresden.18925.guide" rel="external noopener noreferrer"
-                        target="_blank">Get more ideas on what to do on
-                        the Dresden Travel Guide.</a></p>
-            </div>
-            <div id="schalter_oben" style="display: block;"><a aria-label="Seite scrollt zum Seitenanfang"
-                    class="schalter_top" href="/#top" role="link"></a></div>
-            <div id="finish"></div>
-            <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-            <script defer="True" src="js/jquery.js"></script>
-            <script defer="True" src="js/bootstrap.js"></script>
-            <script defer="True" src="js/zum-geruecht.js"></script>
-            <script defer="True" src="js/lightbox.js"></script>
-        </footer>
+      <footer role="contentinfo">
+        <div id="footer">
+          <img
+            alt=""
+            class="img-responsive"
+            src="images/footer1.png"
+            title=""
+          />
+          <a
+            href="https://www.hausbrauerei-laubegast.de/home.htm"
+            rel="external noopener noreferrer"
+            target="_blank"
+            class=""
+            ><img
+              alt="Hausbrauerei Laubegast"
+              class="img-responsive"
+              src="images/footer2.png"
+              title="Hausbrauerei Laubegast"
+          /></a>
+          <p class="">
+            Zum Gerücht - Die letzte Kaschemme<br />Altlaubegast 5, 01279
+            Dresden<br />Telefon: 0351 – 251 34 25<br /><a
+              href="mailto:info@zum-geruecht.de"
+              >info@zum-geruecht.de</a
+            >
+          </p>
+          <p class=""></p>
+          <div class="spacer_break"></div>
+          <p class="">
+            <a
+              href="https://goo.gl/maps/PePtEP8hVgw5PGWM8"
+              rel="external noopener noreferrer"
+              target="_blank"
+              >Anfahrt</a
+            ><a href="/reservierungsanfrage">Anfragen</a
+            ><a
+              href="https://hausbrauerei-laubegast.de/"
+              rel="external noopener noreferrer"
+              target="_blank"
+              >Zum BierShop</a
+            ><a
+              href="https://www.facebook.com/zumgeruecht"
+              rel="external noopener noreferrer"
+              title="Zum Gerücht bei Facebook"
+              target="_blank"
+              >GerüchteFacebook</a
+            ><a
+              href="https://www.instagram.com/zum_geruecht/"
+              rel="external noopener noreferrer"
+              title="Zum Gerücht bei Instagram"
+              target="_blank"
+              >GerüchteInstagram</a
+            ><a href="/datenschutz">Datenschutzerklärung</a
+            ><a href="/impressum">Impressum</a>
+          </p>
+          <div class="spacer_break"></div>
+          <p class="">
+            <a
+              href="https://www.dresden-central.de/"
+              rel="external noopener noreferrer"
+              target="_blank"
+              >Gästewohnung im Barockviertel Dresden</a
+            >
+          </p>
+          <p class="">
+            <a
+              href="https://www.ravenshope.de/"
+              rel="external noopener noreferrer"
+              target="_blank"
+              >Chillout Linie von Bert Stephan</a
+            >
+          </p>
+          <p class="">
+            <a
+              href="https://www.kayak.co.uk/Dresden.18925.guide"
+              rel="external noopener noreferrer"
+              target="_blank"
+              >Get more ideas on what to do on the Dresden Travel Guide.</a
+            >
+          </p>
+        </div>
+        <div id="schalter_oben" style="display: block">
+          <a
+            aria-label="Seite scrollt zum Seitenanfang"
+            class="schalter_top"
+            href="/#top"
+            role="link"
+          ></a>
+        </div>
+        <div id="finish"></div>
+        <script defer src="js/jquery.js"></script>
+        <script defer src="js/bootstrap.js"></script>
+        <script defer src="js/zum-geruecht.js"></script>
+        <script defer src="js/lightbox.js"></script>
+      </footer>
     </div>
     <script src="/js/admin-loader.js"></script>
-</body>
-
+  </body>
 </html>

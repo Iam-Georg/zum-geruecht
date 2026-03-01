@@ -57,15 +57,18 @@
   }
 
   // ─── Session-Timeout Warnung (10 Minuten vor Ablauf) ─────────────────────────
-  // Token läuft nach 8 h ab → Warnung nach 7 h 50 min
-  setTimeout(
-    () => {
+  // Timer startet erst nach erfolgreichem Login – nicht beim Seitenladen.
+  // Wird via window.startSessionTimer() aus showAdminBar() aufgerufen.
+  let _sessionTimer = null;
+  window.startSessionTimer = function () {
+    if (_sessionTimer) clearTimeout(_sessionTimer);
+    // Token läuft nach 8 h ab → Warnung nach 7 h 50 min
+    _sessionTimer = setTimeout(() => {
       if (window.AdminState.isAuthenticated) {
         window.showNotify("~ Session läuft in 10 Minuten ab – bitte speichern & neu einloggen ~", "error");
       }
-    },
-    (8 * 60 - 10) * 60 * 1000,
-  );
+    }, (8 * 60 - 10) * 60 * 1000);
+  };
 
   // ─── Start ────────────────────────────────────────────────────────────────────
   if (document.readyState === "loading")

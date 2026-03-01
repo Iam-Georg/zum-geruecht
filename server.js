@@ -1,4 +1,14 @@
 require('dotenv').config();
+
+// ─── Startup-Validierung ──────────────────────────────────────────────────────
+const REQUIRED_ENV = ['JWT_SECRET', 'ADMIN_PASSWORD_HASH'];
+const missingEnv = REQUIRED_ENV.filter(k => !process.env[k]);
+if (missingEnv.length) {
+  console.error(`[FATAL] Fehlende Umgebungsvariablen: ${missingEnv.join(', ')}`);
+  console.error('Bitte .env Datei prüfen.');
+  process.exit(1);
+}
+
 const express = require('express');
 const sharp   = require('sharp');
 const jwt = require('jsonwebtoken');
@@ -24,6 +34,17 @@ app.use((req, res, next) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Content-Security-Policy', [
+    "default-src 'self'",
+    "script-src 'self' https://cdnjs.cloudflare.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "frame-ancestors 'self'",
+  ].join('; '));
   next();
 });
 
@@ -675,22 +696,90 @@ app.post('/api/restore-backup', requireAuth, (req, res) => {
 });
 
 // POST /api/change-password
-app.post('/api/change-password', requireAuth, (req, res) => {
+app.post('/api/change-password', requireAuth, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword)
     return res.status(400).json({ error: 'Felder fehlen' });
-  if (!bcrypt.compareSync(currentPassword, process.env.ADMIN_PASSWORD_HASH))
+
+  const isMatch = await bcrypt.compare(currentPassword, process.env.ADMIN_PASSWORD_HASH);
+  if (!isMatch)
     return res.status(401).json({ error: 'Aktuelles Passwort falsch' });
   if (newPassword.length < 8)
     return res.status(400).json({ error: 'Neues Passwort zu kurz (min. 8 Zeichen)' });
 
-  const newHash = bcrypt.hashSync(newPassword, 10);
+  const newHash = await bcrypt.hash(newPassword, 10);
   const envPath = path.join(__dirname, '.env');
   let envContent = fs.readFileSync(envPath, 'utf8');
   envContent = envContent.replace(/ADMIN_PASSWORD_HASH=.*/, `ADMIN_PASSWORD_HASH=${newHash}`);
   fs.writeFileSync(envPath, envContent, 'utf8');
   process.env.ADMIN_PASSWORD_HASH = newHash;
   res.json({ success: true });
+});
+
+// POST /api/contact – Reservierungsanfrage entgegennehmen
+const CONTACTS_FILE = path.join(__dirname, 'kontaktanfragen.json');
+
+// Einfaches Rate-Limit für Kontaktformular: max 5 Anfragen pro IP pro Stunde
+const contactAttempts = new Map();
+setInterval(() => {
+  const cutoff = Date.now() - 60 * 60 * 1000;
+  for (const [ip, times] of contactAttempts.entries()) {
+    const recent = times.filter(t => t > cutoff);
+    if (recent.length === 0) contactAttempts.delete(ip);
+    else contactAttempts.set(ip, recent);
+  }
+}, 60 * 60 * 1000);
+
+app.post('/api/contact', (req, res) => {
+  const ip = getClientIP(req);
+  const now = Date.now();
+  const cutoff = now - 60 * 60 * 1000;
+  const times = (contactAttempts.get(ip) || []).filter(t => t > cutoff);
+  if (times.length >= 5) {
+    return res.status(429).json({ error: 'Zu viele Anfragen. Bitte später erneut versuchen.' });
+  }
+  contactAttempts.set(ip, [...times, now]);
+
+  const { name, email, telefon, platz, anfrage, datenschutz, website } = req.body;
+
+  // Honeypot – Bots füllen das website-Feld aus
+  if (website) return res.status(400).json({ error: 'Ungültige Anfrage' });
+
+  // Pflichtfelder
+  if (!name || !email || !platz || !anfrage || datenschutz !== '1')
+    return res.status(400).json({ error: 'Bitte alle Pflichtfelder ausfüllen' });
+
+  // Einfache E-Mail-Validierung
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+    return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
+
+  // Platz-Werte validieren (muss einem der Select-Optionen entsprechen)
+  const erlaubtePlaetze = ['Nichtraucherbereich', 'Raucherbereich', 'Egal'];
+  if (!erlaubtePlaetze.includes(platz))
+    return res.status(400).json({ error: 'Ungültige Platzauswahl' });
+
+  const entry = {
+    timestamp: new Date().toISOString(),
+    name:      name.trim().slice(0, 200),
+    email:     email.trim().slice(0, 200),
+    telefon:   (telefon || '').trim().slice(0, 50),
+    platz:     platz.trim().slice(0, 50),
+    anfrage:   anfrage.trim().slice(0, 2000),
+  };
+
+  let contacts = [];
+  if (fs.existsSync(CONTACTS_FILE)) {
+    try { contacts = JSON.parse(fs.readFileSync(CONTACTS_FILE, 'utf8')); } catch {}
+  }
+  contacts.push(entry);
+
+  try {
+    fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2), 'utf8');
+    console.log(`[Kontakt] Neue Anfrage von ${entry.name} (${entry.email})`);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Anfrage konnte nicht gespeichert werden' });
+  }
 });
 
 app.use((err, req, res, next) => {
